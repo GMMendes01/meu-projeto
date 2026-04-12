@@ -9,6 +9,7 @@
     <script src="https://kit.fontawesome.com/02669f3445.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.min.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
     
     <style>
         .swiper { width: 100%; padding-bottom: 40px; }
