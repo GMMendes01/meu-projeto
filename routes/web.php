@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\UserController;
 
 Route::get('/', function () {
     // Busca no banco usando o Eloquent ORM
@@ -22,6 +23,11 @@ Route::get('/', function () {
 
     return view('index', compact('destaques', 'produtosGerais', 'categorias'));
 });
+
+//Rotas de Conta
+Route::get('/meusdados',[UserController::class, 'meusdados']);
+Route::post('/meusdados',[UserController::class, 'meusdados']);
+
 // Rotas de Registro
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);

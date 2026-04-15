@@ -148,7 +148,7 @@
                       Olá, {{ auth()->user()->name }}
                     </button>
                     <div id="menu" class="dropdown-content">
-                         <a href="./meusdados.blade.php">Meus dados</a>
+                         <a href="/meusdados">Meus dados</a>
                          <form method="POST" action="/logout">
                         @csrf
                          <button type="submit">Sair</button>
@@ -225,8 +225,6 @@
                     @endforeach
                 </div>
                 <div class="swiper-pagination"></div>
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div> 
             </div>
 
         </section>
