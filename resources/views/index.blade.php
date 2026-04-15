@@ -15,13 +15,12 @@
         .swiper { width: 100%; padding-bottom: 40px; }
         .swiper-button-next {  
              color: #1e293b;
-             margin-right: 40px;
-             margin-top:-7%;
+             margin-right: -20px;
+
              }  
         .swiper-button-prev{
             color: #1e293b;
-            margin-left: 40px;
-            margin-top:-7%;
+            margin-left: -20px;
             }  
 .swiper-pagination {
     display: flex; 
@@ -83,7 +82,10 @@
 .dropdown-content.show {
     display: block;
 }
-        
+    
+    .Banner1Test{
+        margin-bottom:40px;
+    }
 
 
     </style>
@@ -188,7 +190,7 @@
 </nav>
 
     <main class="max-w-7xl mx-auto p-6 md:p-10">
-        
+        <img class="Banner1Test" src="{{ asset('Banner1.png') }}" alt="">
         <section class="mb-16">
             <div class="flex items-center gap-2 mb-6">
                 <i class="fa-solid fa-fire" style="color: #f52727; font-size: 30px "></i>
@@ -223,10 +225,10 @@
                     @endforeach
                 </div>
                 <div class="swiper-pagination"></div>
-
-            </div>
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div> 
+            </div>
+
         </section>
 
         <hr class="mb-16 border-gray-200">
