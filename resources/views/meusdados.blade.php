@@ -9,6 +9,7 @@
     <script src="https://kit.fontawesome.com/02669f3445.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.min.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
 </head>
 <body class="bg-[#f4f4f4] flex items-center justify-center min-h-screen font-sans">
 
@@ -19,7 +20,7 @@
             <!-- Lado Esquerdo (Azul) -->
             <div class="relative w-[35%] bg-[#465367] p-[50px] text-white flex flex-col justify-center">
                 <!-- Botão Home (Substituindo o absolute manual por Tailwind) -->
-                <a class="absolute top-10 left-10 text-white no-underline text-sm flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity" href="#">
+                <a class="absolute top-10 left-10 text-white no-underline text-sm flex items-center gap-2 opacity-80 hover:opacity-100 transition-opacity"  href="/" >
                     <i class="fa-solid fa-angle-left"></i> Home
                 </a>
 

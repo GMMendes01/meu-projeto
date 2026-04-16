@@ -25,11 +25,6 @@ Route::put('/carrinho/{produto}', [CarrinhoController::class, 'update'])->name('
 Route::delete('/carrinho/{produto}', [CarrinhoController::class, 'destroy'])->name('carrinho.remove');
 Route::delete('/carrinho', [CarrinhoController::class, 'clear'])->name('carrinho.clear');
 
-//Rotas home
-Route::get('/index',[UserController::class, 'home']);
-Route::post('/index',[UserController::class, 'home']);
-
-
 //Rotas de Conta
 Route::get('/meusdados',[UserController::class, 'meusdados']);
 Route::post('/meusdados',[UserController::class, 'meusdados']);
