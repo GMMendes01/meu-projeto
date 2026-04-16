@@ -11,3 +11,43 @@ logo após na pasta do projeto
 4 - "php artisan db:seed"  
 4 - para rodar o projeto "php artisan serve"
 5 - caso nao funcione tente "composer global require laravel/installer" e tente o item 4
+
+## Como rodar no GitHub Codespaces
+
+### Terminal 1 - Servidor Laravel
+```bash
+cd /workspaces/PI-3-Semestre
+/usr/local/php/8.4.8/bin/php artisan serve --host=0.0.0.0 --port=8000
+```
+
+### Terminal 2 - Vite (Hot Module Replacement / Assets)
+```bash
+cd /workspaces/PI-3-Semestre
+npm run dev
+```
+
+A aplicação estará disponível em: http://localhost:8000
+
+### Funcionalidades Implementadas
+
+#### ✅ Carrinho de Compras com Modal/Overlay
+- **SEM Redirecionamento**: Ao clicar em "Adicionar ao Carrinho", o item é adicionado na mesma página
+- **Modal Sobreposto**: Carrinho exibido como um overlay/modal sobre a página inicial
+- **Requisições AJAX**: Todas as operações do carrinho usam AJAX (sem refresh de página)
+- **Notificações**: Feedback visual ao adicionar, remover ou atualizar quantidade
+- **Badge Dinâmico**: Numero de itens atualizado em tempo real
+
+Como usar:
+1. Clique em "Adicionar ao Carrinho" ou "Adicionar ao Pedido" em qualquer produto
+2. Veja a notificação de sucesso (canto superior direito)
+3. Badge com número de itens atualiza automaticamente
+4. Clique no ícone do carrinho (🛒) para abrir o modal
+5. No modal pode: aumentar/diminuir quantidade, remover itens, continuar comprando
+
+### Possíveis Erros e Soluções
+
+Se PHP não funcionar com `libcrypto.so.1.1 error`, use:
+```bash
+/usr/local/php/8.4.8/bin/php artisan serve --host=0.0.0.0 --port=8000
+```
+

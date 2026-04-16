@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Distribuidora Foccus | Portal B2B</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
@@ -91,6 +92,9 @@
     </style>
 </head>
 <body class="bg-gray-50 font-sans">
+    @php
+        $quantidadeCarrinho = array_sum(session('carrinho', []));
+    @endphp
 
     <nav class="bg-slate-500 text-white p-4 shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center gap-8">
@@ -181,13 +185,24 @@
                 @endguest
             </div>
 
-            <div class="bg-slate-800 px-4 py-2 rounded-full cursor-pointer hover:bg-slate-700 transition flex items-center gap-2">
+            <button type="button" class="relative bg-slate-800 px-4 py-2 rounded-full hover:bg-slate-700 transition flex items-center gap-2" id="btnCart" onclick="openCartModal()">
                 <span class="text-sm">🛒</span>
                 <span class="text-xs font-bold hidden md:inline">Carrinho</span>
-            </div>
+                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center" id="carrinhoCountBadge" style="display: none;">
+                    0
+                </span>
+            </button>
         </div>
     </div>
 </nav>
+
+    @if (session('success') || session('error'))
+        <div class="max-w-7xl mx-auto px-6 pt-6">
+            <div class="rounded-xl border px-4 py-3 text-sm {{ session('success') ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-red-200 bg-red-50 text-red-700' }}">
+                {{ session('success') ?? session('error') }}
+            </div>
+        </div>
+    @endif
 
     <main class="max-w-7xl mx-auto p-6 md:p-10">
         <img class="Banner1Test" src="{{ asset('Banner1.png') }}" alt="">
@@ -217,9 +232,13 @@
                                     @endif
                                     <p class="text-xl font-black text-red-600">R$ {{ number_format($item->preco_atual, 2, ',', '.') }}</p>
                                 </div>
-                                <button class="w-full mt-3 bg-slate-800 text-white py-2 rounded-lg text-sm font-bold hover:bg-slate-900 transition">
-                                    🛒 Adicionar
-                                </button>
+                                <form action="{{ route('carrinho.add', $item, false) }}" method="POST" class="mt-3 add-to-cart-form" data-product-id="{{ $item->id }}" onsubmit="return addToCart(event)">
+                                    @csrf
+                                    <input type="hidden" name="quantidade" value="1">
+                                    <button type="submit" class="w-full bg-slate-800 text-white py-2 rounded-lg text-sm font-bold hover:bg-slate-900 transition disabled:bg-slate-400 disabled:cursor-not-allowed" {{ $item->quantidade <= 0 ? 'disabled' : '' }}>
+                                        {{ $item->quantidade > 0 ? '🛒 Adicionar' : 'Esgotado' }}
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     @endforeach
@@ -257,7 +276,7 @@
                 R$ {{ number_format($produto->preco_atual, 2, ',', '.') }}
             </p>
 
-            <form action="#" method="POST" class="mt-4">
+            <form action="{{ route('carrinho.add', $produto, false) }}" method="POST" class="mt-4 add-to-cart-form" data-product-id="{{ $produto->id }}" onsubmit="return addToCart(event)">
                 @csrf
                 <input type="hidden" name="produto_id" value="{{ $produto->id }}">
                 
@@ -283,6 +302,262 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    
+    <!-- Modal do Carrinho -->
+    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[80vh] flex flex-col">
+            <!-- Header -->
+            <div class="flex justify-between items-center p-6 border-b">
+                <h2 class="text-xl font-bold">Meu Carrinho</h2>
+                <button onclick="closeCartModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            
+            <!-- Conteúdo -->
+            <div class="flex-1 overflow-y-auto p-6" id="cartContent">
+                <p class="text-center text-gray-500">Carregando...</p>
+            </div>
+            
+            <!-- Rodapé -->
+            <div class="border-t p-6 space-y-2">
+                <div class="flex justify-between text-lg font-bold">
+                    <span>Total:</span>
+                    <span id="cartTotal">R$ 0,00</span>
+                </div>
+                <button onclick="finalizarPedido()" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition">
+                    Finalizar Pedido
+                </button>
+                <button onclick="closeCartModal()" class="w-full bg-gray-300 text-gray-800 py-2 rounded-lg font-bold hover:bg-gray-400 transition">
+                    Continuar Comprando
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+            document.querySelector('input[name="_token"]')?.value;
+
+        axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
+        if (csrfToken) {
+            axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
+        }
+
+        // Adicionar event listeners aos formulários de carrinho
+        document.addEventListener('DOMContentLoaded', function() {
+            // Atualizar badge do carrinho ao carregar
+            updateCartBadge();
+        });
+
+        function openCartModal() {
+            loadCart();
+            document.getElementById('cartModal').classList.remove('hidden');
+        }
+
+        function closeCartModal() {
+            document.getElementById('cartModal').classList.add('hidden');
+        }
+
+        function addToCart(event) {
+            event.preventDefault();
+            
+            const form = event.currentTarget || event.target;
+            const quantidadeInput = form.querySelector('input[name="quantidade"]');
+            const quantidade = quantidadeInput ? quantidadeInput.value : 1;
+            const url = form.getAttribute('action');
+
+            if (!url) {
+                showNotification('Erro ao adicionar ao carrinho', 'error');
+                return false;
+            }
+            
+            axios.post(url, {
+                quantidade: quantidade
+            }, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.data.success) {
+                    showNotification(response.data.message, 'success');
+                    updateCartBadge();
+                    // Abrir o modal
+                    if (!document.getElementById('cartModal').classList.contains('hidden')) {
+                        loadCart();
+                    }
+                }
+            })
+            .catch(error => {
+                const message = error.response?.data?.message
+                    || error.response?.data?.errors?.quantidade?.[0]
+                    || 'Erro ao adicionar ao carrinho';
+                showNotification(message, 'error');
+            });
+
+            return false;
+        }
+
+        function loadCart() {
+            axios.get('/api/carrinho')
+                .then(response => {
+                    renderCart(response.data);
+                })
+                .catch(error => {
+                    document.getElementById('cartContent').innerHTML = 
+                        '<p class="text-center text-red-500">Erro ao carregar carrinho</p>';
+                });
+        }
+
+        function renderCart(data) {
+            const { carrinho, total, quantidadeTotal } = data;
+            const cartContent = document.getElementById('cartContent');
+            
+            if (carrinho.length === 0) {
+                cartContent.innerHTML = '<p class="text-center text-gray-500 py-8">Carrinho vazio</p>';
+                document.getElementById('cartTotal').textContent = 'R$ 0,00';
+                return;
+            }
+            
+            let html = '<div class="space-y-4">';
+            
+            carrinho.forEach(item => {
+                const produto = item.produto;
+                html += `
+                    <div class="border rounded-lg p-3 flex items-start justify-between hover:bg-gray-50">
+                        <div class="flex-1">
+                            <p class="font-bold text-sm">${produto.nome}</p>
+                            <p class="text-xs text-gray-500">${produto.marca}</p>
+                            <p class="text-sm font-bold mt-1">R$ ${formatPrice(produto.preco_atual)}</p>
+                            <div class="flex items-center gap-2 mt-2">
+                                <button onclick="updateQuantity(${produto.id}, ${item.quantidade - 1})" class="px-2 py-1 bg-gray-200 rounded text-xs hover:bg-gray-300">-</button>
+                                <span class="text-sm font-bold px-2">${item.quantidade}</span>
+                                <button onclick="updateQuantity(${produto.id}, ${item.quantidade + 1})" class="px-2 py-1 bg-gray-200 rounded text-xs hover:bg-gray-300">+</button>
+                            </div>
+                        </div>
+                        <div class="text-right ml-2">
+                            <p class="font-bold text-sm">R$ ${formatPrice(item.subtotal)}</p>
+                            <button onclick="removeFromCart(${produto.id})" class="text-red-500 text-xs hover:text-red-700 mt-2">Remover</button>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            cartContent.innerHTML = html;
+            document.getElementById('cartTotal').textContent = `R$ ${formatPrice(total)}`;
+        }
+
+        function updateQuantity(productId, newQuantidade) {
+            if (newQuantidade < 1) {
+                removeFromCart(productId);
+                return;
+            }
+            
+            const url = `/carrinho/${productId}`;
+            
+            axios.put(url, {
+                quantidade: newQuantidade
+            }, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                loadCart();
+                updateCartBadge();
+            })
+            .catch(error => {
+                showNotification('Erro ao atualizar quantidade', 'error');
+            });
+        }
+
+        function removeFromCart(productId) {
+            const url = `/carrinho/${productId}`;
+            
+            axios.delete(url, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            })
+            .then(response => {
+                if (response.data && response.data.carrinho) {
+                    renderCart(response.data);
+                    updateCartBadgeValue(response.data.quantidadeTotal || 0);
+                } else {
+                    loadCart();
+                    updateCartBadge();
+                }
+                showNotification(response.data?.message || 'Produto removido do carrinho', 'success');
+            })
+            .catch(error => {
+                showNotification('Erro ao remover produto', 'error');
+            });
+        }
+
+        function updateCartBadgeValue(quantidade) {
+            const badge = document.getElementById('carrinhoCountBadge');
+
+            if (!badge) {
+                return;
+            }
+
+            if (quantidade > 0) {
+                badge.textContent = quantidade;
+                badge.style.display = 'flex';
+            } else {
+                badge.style.display = 'none';
+            }
+        }
+
+        function updateCartBadge() {
+            axios.get('/api/carrinho')
+                .then(response => {
+                    updateCartBadgeValue(response.data.quantidadeTotal || 0);
+                });
+        }
+
+        function formatPrice(price) {
+            return parseFloat(price).toLocaleString('pt-BR', { 
+                minimumFractionDigits: 2, 
+                maximumFractionDigits: 2 
+            });
+        }
+
+        function showNotification(message, type) {
+            // Criar elemento de notificação
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg text-sm font-bold z-50 ${
+                type === 'success' 
+                    ? 'bg-green-100 text-green-700 border border-green-200' 
+                    : 'bg-red-100 text-red-700 border border-red-200'
+            }`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            // Remover após 3 segundos
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        function finalizarPedido() {
+            alert('Finalizar pedido - Funcionalidade a implementar');
+            // Implementar lógica de finalizar pedido
+        }
+
+        // Fechar modal ao clicar fora dele
+        document.getElementById('cartModal')?.addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeCartModal();
+            }
+        });
+    </script>
+    
     <script>
         var swiper = new Swiper(".mySwiper", {
             slidesPerView: 1,
@@ -298,4 +573,5 @@
         });
     </script>
 </body>
+</html>
 </html>
