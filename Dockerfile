@@ -1,15 +1,12 @@
-# Estágio 1: Build (Onde compilamos tudo)
+# --- Estágio 1: Build ---
 FROM php:8.2-fpm AS builder
 
 RUN apt-get update && apt-get install -y \
     curl git unzip libpq-dev \
-    && docker-php-ext-install pdo pdo_pgsql \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+    && docker-php-ext-install pdo pdo_pgsql
 
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Instalar Node.js para compilar o Vite/Mix
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+# Instalar Node.js 22 (Versão necessária para Vite 7 e Tailwind 4)
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
@@ -19,9 +16,9 @@ COPY . .
 # Instalar dependências PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Instalar dependências Node e gerar assets (Otimizado para memória do Render)
-RUN npm install && NODE_OPTIONS="--max-old-space-size=450" npm run build
-
+# Instalar dependências Node e gerar assets
+# Adicionamos o ci para uma instalação mais limpa em ambientes de build
+RUN npm ci && NODE_OPTIONS="--max-old-space-size=450" npm run build
 # --- Estágio 2: Runtime (A imagem final, leve) ---
 FROM php:8.2-fpm
 
