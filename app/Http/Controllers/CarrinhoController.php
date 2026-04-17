@@ -3,30 +3,35 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produto;
+use App\Services\CartService;
 use Illuminate\Http\Request;
 
 class CarrinhoController extends Controller
 {
+    public function __construct(private readonly CartService $cartService)
+    {
+    }
+
     public function getCarrinho()
     {
-        $itensCarrinho = $this->montarItens();
-        $total = collect($itensCarrinho)->sum('subtotal');
-        $quantidadeTotal = collect($itensCarrinho)->sum('quantidade');
+        $resumo = $this->cartService->resumo();
 
         return response()->json([
-            'carrinho' => $itensCarrinho,
-            'total' => $total,
-            'quantidadeTotal' => $quantidadeTotal,
+            'carrinho' => $resumo['itens'],
+            'total' => $resumo['total'],
+            'quantidadeTotal' => $resumo['quantidadeTotal'],
         ]);
     }
 
     public function index()
     {
-        $itens = $this->montarItens();
-        $total = collect($itens)->sum('subtotal');
-        $quantidadeTotal = collect($itens)->sum('quantidade');
+        $resumo = $this->cartService->resumo();
 
-        return view('carrinho', compact('itens', 'total', 'quantidadeTotal'));
+        return view('carrinho', [
+            'itens' => $resumo['itens'],
+            'total' => $resumo['total'],
+            'quantidadeTotal' => $resumo['quantidadeTotal'],
+        ]);
     }
 
     public function store(Request $request, Produto $produto)
@@ -53,16 +58,14 @@ class CarrinhoController extends Controller
         session()->put('carrinho', $carrinho);
 
         if ($request->wantsJson()) {
-            $itensCarrinho = $this->montarItens();
-            $total = collect($itensCarrinho)->sum('subtotal');
-            $quantidadeTotal = collect($itensCarrinho)->sum('quantidade');
+            $resumo = $this->cartService->resumo();
             
             return response()->json([
                 'success' => true,
                 'message' => "{$produto->nome} foi adicionado ao carrinho.",
-                'carrinho' => $itensCarrinho,
-                'total' => $total,
-                'quantidadeTotal' => $quantidadeTotal,
+                'carrinho' => $resumo['itens'],
+                'total' => $resumo['total'],
+                'quantidadeTotal' => $resumo['quantidadeTotal'],
             ]);
         }
 
@@ -84,16 +87,14 @@ class CarrinhoController extends Controller
         session()->put('carrinho', $carrinho);
 
         if ($request->wantsJson()) {
-            $itensCarrinho = $this->montarItens();
-            $total = collect($itensCarrinho)->sum('subtotal');
-            $quantidadeTotal = collect($itensCarrinho)->sum('quantidade');
+            $resumo = $this->cartService->resumo();
             
             return response()->json([
                 'success' => true,
                 'message' => 'Quantidade atualizada.',
-                'carrinho' => $itensCarrinho,
-                'total' => $total,
-                'quantidadeTotal' => $quantidadeTotal,
+                'carrinho' => $resumo['itens'],
+                'total' => $resumo['total'],
+                'quantidadeTotal' => $resumo['quantidadeTotal'],
             ]);
         }
 
@@ -107,16 +108,14 @@ class CarrinhoController extends Controller
         session()->put('carrinho', $carrinho);
 
         if ($request->wantsJson()) {
-            $itensCarrinho = $this->montarItens();
-            $total = collect($itensCarrinho)->sum('subtotal');
-            $quantidadeTotal = collect($itensCarrinho)->sum('quantidade');
+            $resumo = $this->cartService->resumo();
             
             return response()->json([
                 'success' => true,
                 'message' => 'Produto removido do carrinho.',
-                'carrinho' => $itensCarrinho,
-                'total' => $total,
-                'quantidadeTotal' => $quantidadeTotal,
+                'carrinho' => $resumo['itens'],
+                'total' => $resumo['total'],
+                'quantidadeTotal' => $resumo['quantidadeTotal'],
             ]);
         }
 
@@ -125,7 +124,7 @@ class CarrinhoController extends Controller
 
     public function clear(Request $request)
     {
-        session()->forget('carrinho');
+        $this->cartService->limpar();
 
         if ($request->wantsJson()) {
             return response()->json([
@@ -138,48 +137,5 @@ class CarrinhoController extends Controller
         }
 
         return back()->with('success', 'Carrinho limpo.');
-    }
-
-    private function montarItens(): array
-    {
-        $carrinho = session()->get('carrinho', []);
-        $produtos = Produto::whereIn('id', array_keys($carrinho))->get()->keyBy('id');
-
-        $itens = [];
-        $carrinhoLimpo = [];
-
-        foreach ($carrinho as $produtoId => $quantidadeSolicitada) {
-            $produto = $produtos->get($produtoId);
-
-            if (! $produto) {
-                continue;
-            }
-
-            $estoqueDisponivel = (int) $produto->quantidade;
-
-            if ($estoqueDisponivel <= 0) {
-                continue;
-            }
-
-            $quantidade = min((int) $quantidadeSolicitada, $estoqueDisponivel);
-
-            if ($quantidade <= 0) {
-                continue;
-            }
-
-            $subtotal = $quantidade * (float) $produto->preco_atual;
-
-            $itens[] = [
-                'produto' => $produto,
-                'quantidade' => $quantidade,
-                'subtotal' => $subtotal,
-            ];
-
-            $carrinhoLimpo[$produto->id] = $quantidade;
-        }
-
-        session()->put('carrinho', $carrinhoLimpo);
-
-        return $itens;
     }
 }
