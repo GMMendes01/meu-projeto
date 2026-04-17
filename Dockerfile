@@ -1,70 +1,51 @@
-# Estágio 1: Build
+# Estágio 1: Build (Onde compilamos tudo)
 FROM php:8.2-fpm AS builder
 
-# Instalar dependências do sistema
 RUN apt-get update && apt-get install -y \
-    curl \
-    git \
-    unzip \
-    libpq-dev \
-    libmariadb-dev \
-    && docker-php-ext-install pdo pdo_mysql \
+    curl git unzip libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Instalar Node.js e ferramentas de build
+# Instalar Node.js para compilar o Vite/Mix
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
-    && apt-get install -y nodejs build-essential python3 \
-    && npm install -g npm@latest \
+    && apt-get install -y nodejs \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
-
-# Copiar arquivos
-COPY composer.json composer.lock* ./
-COPY package.json package-lock.json* ./
 COPY . .
 
 # Instalar dependências PHP
 RUN composer install --no-dev --optimize-autoloader
 
-# Instalar dependências Node e build assets
-RUN npm install --no-optional && npm run build
+# Instalar dependências Node e gerar assets (Otimizado para memória do Render)
+RUN npm install && NODE_OPTIONS="--max-old-space-size=450" npm run build
 
-# Estágio 2: Runtime
+# --- Estágio 2: Runtime (A imagem final, leve) ---
 FROM php:8.2-fpm
 
-# Instalar dependências do sistema
+# Instalar extensões necessárias para rodar o sistema e Nginx/Supervisor
 RUN apt-get update && apt-get install -y \
-    curl \
-    libpq-dev \
-    libmariadb-dev \
-    && docker-php-ext-install pdo pdo_mysql \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Instalar Nginx
-RUN apt-get update && apt-get install -y nginx supervisor \
+    libpq-dev nginx supervisor \
+    && docker-php-ext-install pdo pdo_pgsql \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
-# Copiar aplicação do builder
+# Copiamos apenas o que foi gerado no builder (já inclui a pasta /public/build)
 COPY --from=builder /app .
 
-# Configurar permissões
+# Ajuste de permissões para o Laravel conseguir escrever logs e cache
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
-# Copiar configuração Nginx
+# Configurações de serviços
 COPY docker/nginx.conf /etc/nginx/sites-available/default
-COPY docker/php.conf /usr/local/etc/php-fpm.d/www.conf
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
-# Expor porta
+# O Render usa portas dinâmicas. O EXPOSE é apenas informativo.
 EXPOSE 8080
 
-# Script de inicialização
 COPY docker/entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
