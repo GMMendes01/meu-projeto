@@ -22,23 +22,26 @@ class Produto extends Model
         'destaque',
         'ativo',
     ];
-public function getUrlImagemAttribute()
-{
-    if (!empty($this->imagem_url)) {
-        return $this->imagem_url;
-    }
 
-    if ($this->imagem && file_exists(public_path('storage/' . $this->imagem))) {
-        return asset('storage/' . $this->imagem);
-    }
+    protected $appends = ['url_imagem'];
 
-    return app(ProductImageResolver::class)->resolve(
-        $this->nome,
-        $this->marca,
-        $this->categoria,
-        $this->codigo_barras,
-    );
-}
+    public function getUrlImagemAttribute()
+    {
+        if (!empty($this->attributes['imagem_url'] ?? null)) {
+            return $this->attributes['imagem_url'];
+        }
+
+        if (isset($this->attributes['imagem']) && file_exists(public_path('storage/' . $this->attributes['imagem']))) {
+            return asset('storage/' . $this->attributes['imagem']);
+        }
+
+        return app(ProductImageResolver::class)->resolve(
+            $this->nome,
+            $this->marca,
+            $this->categoria,
+            $this->codigo_barras,
+        );
+    }
    
     protected $casts = [
         'preco_antigo' => 'decimal:2',

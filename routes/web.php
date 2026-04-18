@@ -10,6 +10,7 @@ use App\Http\Controllers\CarrinhoController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminProdutoController;
 
 Route::get('/', function () {
     $destaques = Produto::where('destaque', 1)->get();
@@ -44,7 +45,21 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 // Rotas de Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
-Route::GET('/logout', function () {
+Route::post('/logout', function () {
     Auth::logout();
     return redirect('/');
+})->name('logout');
+
+// Rotas de Admin (Painel de Administração)
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminProdutoController::class, 'dashboard'])->name('dashboard');
+    Route::get('/produtos/search', [AdminProdutoController::class, 'search'])->name('produtos.search');
+    
+    // CRUD de Produtos
+    Route::resource('produtos', AdminProdutoController::class);
+    
+    // Ações especiais
+    Route::patch('/produtos/{produto}/toggle', [AdminProdutoController::class, 'toggle'])->name('produtos.toggle');
+    Route::patch('/produtos/{produto}/toggle-destaque', [AdminProdutoController::class, 'toggleDestaque'])->name('produtos.toggleDestaque');
 });
