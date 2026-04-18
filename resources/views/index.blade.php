@@ -3,342 +3,539 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Distribuidora Foccus | Portal B2B</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/02669f3445.js" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
-    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
-    
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
+
     <style>
-        .swiper { width: 100%; padding-bottom: 40px; }
-        .swiper-button-next {  
-             color: #1e293b;
-             margin-right: -20px;
+        :root {
+            --brand-900: #0f172a;
+            --brand-700: #1d4ed8;
+            --brand-500: #0ea5e9;
+            --accent-500: #f97316;
+            --surface: #f8fafc;
+            --promo: #dc2626;
+        }
 
-             }  
-        .swiper-button-prev{
-            color: #1e293b;
-            margin-left: -20px;
-            }  
-.swiper-pagination {
-    display: flex; 
-    justify-content: center; 
-    flex-wrap: nowrap; 
-    overflow-x: auto; 
-    padding: 10px 0; 
-    
-    /* Para esconder a barra de rolagem */
-    -ms-overflow-style: none;  
-    scrollbar-width: none;  
-}
+        body {
+            background:
+                radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.18), transparent 34%),
+                radial-gradient(circle at 100% 10%, rgba(249, 115, 22, 0.14), transparent 38%),
+                linear-gradient(180deg, #f8fafc 0%, #eef2ff 42%, #f8fafc 100%);
+        }
 
+        .animated-bg {
+            position: relative;
+            overflow: hidden;
+        }
 
-.swiper-pagination-bullet {
-    flex-shrink: 0; 
-}
+        .animated-bg::before {
+            content: "";
+            position: absolute;
+            inset: -50% -20% auto;
+            height: 280px;
+            background: conic-gradient(from 90deg, rgba(14, 165, 233, 0.2), rgba(59, 130, 246, 0.08), rgba(249, 115, 22, 0.15), rgba(14, 165, 233, 0.2));
+            filter: blur(24px);
+            animation: spin 24s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-    background-color:#1e293b;
-    padding:10px;
-    border-radius:20px;
-    font-size:12px;
-    font-weight:bold;
-}  
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
 
+        .glass {
+            backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.82);
+        }
 
-.dropdown:hover{
- background-color: #334155;
- transition:1s;
-}
+        .reveal {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    background: #fff;
-    border: 1px solid #ccc;
-    min-width: 150px;
-}
+        .js .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity 0.55s ease, transform 0.55s ease;
+        }
 
-.dropdown-content a,
-.dropdown-content button {
-    display: block;
-    padding: 10px;
-    text-decoration: none;
-    border: none;
-    background: none;
-    width: 100%;
-    text-align: left;
-    color:#424242;
-}
-.dropdown-content a,
-.dropdown-content button:hover {
-    background-color:#ccc;
-}
+        .js .reveal.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-.dropdown-content.show {
-    display: block;
-}
-    
-    .Banner1Test{
-        margin-bottom:40px;
-    }
+        .swiper {
+            width: 100%;
+            padding: 8px 4px 38px;
+        }
 
+        .swiper-pagination {
+            display: none !important;
+        }
 
+        .carousel-shell {
+            position: relative;
+            border-radius: 26px;
+            border: 1px solid rgba(29, 78, 216, 0.15);
+            background: linear-gradient(180deg, rgba(255,255,255,0.9) 0%, rgba(248,250,252,0.9) 100%);
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+            padding: 14px;
+        }
+
+        .hero-banner-wrap {
+            position: relative;
+            min-height: 100%;
+            border-radius: 28px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(30, 64, 175, 0.92), rgba(14, 165, 233, 0.88));
+            padding: 18px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.26);
+        }
+
+        .hero-banner-wrap::after {
+            content: "";
+            position: absolute;
+            inset: auto 12px 12px 12px;
+            height: 24px;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.14);
+            filter: blur(18px);
+            pointer-events: none;
+        }
+
+        .carousel-counter {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border-radius: 9999px;
+            background: #0f172a;
+            color: #fff;
+            font-size: 11px;
+            font-weight: 900;
+            letter-spacing: 0.16em;
+            padding: 8px 12px;
+        }
+
+        .carousel-counter-current {
+            color: #38bdf8;
+        }
+
+        .carousel-counter-total {
+            color: #cbd5e1;
+        }
+
+        .promo-card.has-discount {
+            border-width: 2px;
+            box-shadow: 0 16px 34px rgba(220, 38, 38, 0.17);
+        }
+
+        .promo-card {
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+        }
+
+        .promo-card.has-discount:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 18px 36px rgba(220, 38, 38, 0.22);
+        }
+
+        .category-chip {
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+
+        .category-chip:hover {
+            transform: translateY(-2px);
+        }
+
+        .category-chip.active {
+            box-shadow: 0 10px 22px rgba(30, 64, 175, 0.24);
+            opacity: 1;
+        }
+
+        .product-card {
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 14px 28px rgba(15, 23, 42, 0.14);
+        }
+
+        .category-grid {
+            transition: opacity 0.28s ease, transform 0.28s ease;
+        }
+
+        .category-grid.is-switching {
+            opacity: 0.28;
+            transform: translateY(10px) scale(0.99);
+        }
+
+        .batch-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border-radius: 9999px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.96), rgba(29, 78, 216, 0.92));
+            color: #fff;
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.16em;
+            padding: 6px 10px;
+            text-transform: uppercase;
+        }
+
+        .batch-pill span {
+            color: #38bdf8;
+        }
     </style>
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="min-h-screen text-slate-900">
     @php
         $quantidadeCarrinho = array_sum(session('carrinho', []));
+
+        $produtosPorCategoria = $produtosGerais
+            ->groupBy(fn ($produto) => $produto->categoria ?: 'Sem categoria');
+
+        $categoriaLista = $produtosPorCategoria->keys()->values();
+
+        $categoriaMeta = [];
+        foreach ($categoriaLista as $nomeCategoria) {
+            $slug = Illuminate\Support\Str::slug($nomeCategoria);
+            $normalizado = Illuminate\Support\Str::lower($nomeCategoria);
+
+            $meta = [
+                'slug' => $slug,
+                'icone' => 'fa-box-open',
+                'cores' => 'from-slate-600 to-slate-500',
+                'bg' => 'bg-slate-100 text-slate-700',
+            ];
+
+            if (str_contains($normalizado, 'beb') || str_contains($normalizado, 'suco') || str_contains($normalizado, 'refri')) {
+                $meta = ['slug' => $slug, 'icone' => 'fa-glass-water', 'cores' => 'from-cyan-600 to-blue-600', 'bg' => 'bg-cyan-100 text-cyan-700'];
+            } elseif (str_contains($normalizado, 'limpeza')) {
+                $meta = ['slug' => $slug, 'icone' => 'fa-soap', 'cores' => 'from-indigo-600 to-blue-700', 'bg' => 'bg-indigo-100 text-indigo-700'];
+            } elseif (str_contains($normalizado, 'higiene')) {
+                $meta = ['slug' => $slug, 'icone' => 'fa-pump-soap', 'cores' => 'from-emerald-600 to-teal-600', 'bg' => 'bg-emerald-100 text-emerald-700'];
+            } elseif (str_contains($normalizado, 'alimento') || str_contains($normalizado, 'mercearia')) {
+                $meta = ['slug' => $slug, 'icone' => 'fa-wheat-awn', 'cores' => 'from-amber-600 to-orange-600', 'bg' => 'bg-amber-100 text-amber-700'];
+            } elseif (str_contains($normalizado, 'pet')) {
+                $meta = ['slug' => $slug, 'icone' => 'fa-paw', 'cores' => 'from-fuchsia-600 to-pink-600', 'bg' => 'bg-fuchsia-100 text-fuchsia-700'];
+            }
+
+            $categoriaMeta[$nomeCategoria] = $meta;
+        }
     @endphp
 
-    <nav class="bg-slate-500 text-white p-4 shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto flex justify-between items-center gap-8">
-        
-        <div class="flex-shrink-0">
-            <a href="/">
-                <img src="{{ asset('LOGO_FOCCUS.png') }}" class="w-40 brightness-0 invert" alt="Logo Foccus">
+    <nav class="glass sticky top-0 z-50 border-b border-white/10">
+        <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 md:px-8">
+            <a href="/" class="shrink-0">
+                <img src="/LOGO_FOCCUS.png" class="w-36 brightness-0 invert md:w-40" alt="Logo Foccus">
             </a>
-        </div>
 
-        <div class="flex-1 max-w-md hidden lg:block">
-            <form action="/search" method="GET" class="relative">
-                <input type="text" 
-                       name="q" 
-                       placeholder="O que você procura hoje?" 
-                       class="w-full bg-slate-600 text-white text-sm rounded-full py-2 px-10 focus:outline-none focus:ring-2 focus:ring-slate-300 placeholder-slate-300 transition-all border border-transparent focus:bg-slate-700">
-                <div class="absolute left-3 top-2.5 text-slate-300">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                    </svg>
-                </div>
-            </form>
-        </div>
-
-        <div class="space-x-6 hidden xl:flex text-sm font-medium items-center">
-            <div class="relative" x-data="{ open: false }">
-                <button @click="open = !open" @click.away="open = false" class="flex items-center hover:text-slate-200 transition outline-none">
-                    Catálogo
-                    <svg class="w-4 h-4 ml-1 transition-transform" :class="open ? 'rotate-180' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-                    </svg>
-                </button>
-
-                <div x-show="open" x-transition class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-xl py-2 z-50 border border-gray-100">
-                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-slate-100">Todos os Produtos</a>
-                    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-slate-100">Lançamentos</a>
-                    <hr class="my-1">
-                    @foreach($categorias as $nomeCategoria)
-    <a href="#" class="block px-4 py-2 text-gray-700 hover:bg-slate-100">
-        {{ $nomeCategoria }}
-    </a>
-@endforeach
-                </div>
+            <div class="hidden flex-1 items-center gap-3 lg:flex">
+                <div class="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-slate-200">Portal B2B</div>
+                <div class="rounded-full bg-white/10 px-4 py-2 text-xs text-slate-200">Entrega em todo Brasil</div>
             </div>
 
-            <a href="#" class="hover:text-slate-200 transition">Pedidos</a>
-            <a href="#" class="hover:text-slate-200 transition">Contato</a>
-        </div>
-
-        <div class="flex items-center space-x-4">
-        <!--Codigo para Verificar Usuario Logado -->
-            @auth
-                <div class="dropdown">
-                    <button onclick="toggleMenu()" class="dropbtn">
-                      Olá, {{ auth()->user()->name }}
-                    </button>
-                    <div id="menu" class="dropdown-content">
-                         <a target="_blank" href="/meusdados">Meus dados</a>
-                         <form m  ethod="GET" action="/logout">
-                        @csrf
-                         <button type="submit">Sair</button>
-                        </form>
-                    </div>
-                </div>
-                <script>
-                    function toggleMenu() {
-                        document.getElementById("menu").classList.toggle("show");
-                    }
-
-                    // fechar ao clicar fora
-                        window.onclick = function(event) {
-                            if (!event.target.matches('.dropbtn')) {
-                                let menu = document.getElementById("menu");
-                                if (menu && menu.classList.contains('show')) {
-                                    menu.classList.remove('show');
-                                }
-                            }
-                        }
-                </script>
-            @endauth
-        <!------------------------------------------------------------>            
-            <div class="hidden sm:flex items-center space-x-3 border-r border-slate-400 pr-4 text-xs">
+            <div class="flex items-center gap-3">
+                @auth
+                    <div class="hidden rounded-full bg-white/10 px-4 py-2 text-xs font-semibold text-slate-100 md:block">Ola, {{ auth()->user()->name }}</div>
+                @endauth
                 @guest
-                <a href="/login" class="hover:text-slate-200 transition">Entrar</a>
-                <a href="/register" class="bg-white text-slate-600 px-3 py-1.5 rounded-lg font-bold hover:bg-slate-100 transition shadow-sm">
-                    Cadastrar
-                </a>
+                    <a href="/login" class="hidden text-sm font-semibold text-slate-100 transition hover:text-white md:inline">Entrar</a>
+                    <a href="/register" class="hidden rounded-full bg-white px-4 py-2 text-sm font-black text-slate-900 transition hover:bg-slate-100 md:inline">Cadastrar</a>
                 @endguest
-            </div>
 
-            <button type="button" class="relative bg-slate-800 px-4 py-2 rounded-full hover:bg-slate-700 transition flex items-center gap-2" id="btnCart" onclick="openCartModal()">
-                <span class="text-sm">🛒</span>
-                <span class="text-xs font-bold hidden md:inline">Carrinho</span>
-                <span class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-black rounded-full w-5 h-5 flex items-center justify-center" id="carrinhoCountBadge" style="display: none;">
-                    0
-                </span>
-            </button>
+                <button type="button" class="relative flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-slate-900 transition hover:bg-slate-100" id="btnCart" onclick="openCartModal()">
+                    <span>🛒</span>
+                    <span class="hidden md:inline">Carrinho</span>
+                    <span class="absolute -right-2 -top-2 hidden h-5 w-5 items-center justify-center rounded-full bg-red-500 text-[10px] font-black text-white" id="carrinhoCountBadge">0</span>
+                </button>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 
     @if (session('success') || session('error'))
-        <div class="max-w-7xl mx-auto px-6 pt-6">
-            <div class="rounded-xl border px-4 py-3 text-sm {{ session('success') ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-red-200 bg-red-50 text-red-700' }}">
+        <div class="mx-auto mt-6 max-w-7xl px-4 md:px-8">
+            <div class="rounded-2xl border px-4 py-3 text-sm {{ session('success') ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-red-200 bg-red-50 text-red-700' }}">
                 {{ session('success') ?? session('error') }}
             </div>
         </div>
     @endif
 
-    <main class="max-w-7xl mx-auto p-6 md:p-10">
-        <img class="Banner1Test" src="{{ asset('Banner1.png') }}" alt="">
-        <section class="mb-16">
-            <div class="flex items-center gap-2 mb-6">
-                <i class="fa-solid fa-fire" style="color: #f52727; font-size: 30px "></i>
-                <h2 class="text-2xl font-bold text-gray-800">Ofertas da Semana</h2>
+    <main class="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-10">
+        <section class="animated-bg reveal relative mb-14 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-lg md:p-10">
+            <div class="relative z-10 grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
+                <div>
+                    <p class="text-xs font-black uppercase tracking-[0.3em] text-blue-700">Distribuidora Foccus</p>
+                    <h1 class="mt-4 text-3xl font-black leading-tight text-slate-900 md:text-5xl">Compras inteligentes com foco em margem e giro.</h1>
+                    <p class="mt-4 max-w-2xl text-slate-600 md:text-lg">Catálogo segmentado por categorias, ofertas em destaque e experiência otimizada para pedidos rápidos no atacado.</p>
+
+                    <div class="mt-6 flex flex-wrap gap-3">
+                        <a href="#ofertas" class="rounded-full bg-blue-700 px-5 py-3 text-sm font-black text-white transition hover:bg-blue-600">Ver ofertas da semana</a>
+                        <a href="#catalogo" class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-black text-slate-700 transition hover:bg-slate-50">Explorar catálogo</a>
+                    </div>
+                </div>
+
+                <div class="hero-banner-wrap overflow-hidden">
+                    <div class="absolute left-4 top-4 z-10 rounded-full bg-white/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] text-white backdrop-blur">
+                        Destaque da semana
+                    </div>
+                    <img class="h-[320px] w-full rounded-2xl object-cover md:h-[420px] lg:h-[520px]" src="/Banner1.png" alt="Banner da semana">
+                </div>
+            </div>
+        </section>
+
+        <section id="ofertas" class="reveal mb-16">
+            <div class="mb-6 flex items-center justify-between gap-3">
+                <div class="flex items-center gap-3">
+                    <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100 text-red-600"><i class="fa-solid fa-fire"></i></span>
+                    <div>
+                        <h2 class="text-2xl font-black text-slate-900">Ofertas da semana</h2>
+                        <p class="text-sm text-slate-500">Carrossel em rolagem continua, pausado no hover.</p>
+                    </div>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="rounded-full bg-red-100 px-3 py-1 text-xs font-black uppercase tracking-wider text-red-700">Descontos ativos</span>
+                    <span class="carousel-counter" id="offerCounter" data-total="{{ max($destaques->count(), 1) }}">
+                        <span class="carousel-counter-current" id="offerCounterCurrent">01</span>
+                        <span>/</span>
+                        <span class="carousel-counter-total" id="offerCounterTotal">{{ str_pad(max($destaques->count(), 1), 2, '0', STR_PAD_LEFT) }}</span>
+                    </span>
+                </div>
             </div>
 
+            <div class="carousel-shell">
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
                     @foreach($destaques as $item)
-                        <div class="swiper-slide bg-white rounded-xl shadow-md border border-red-50 border-opacity-50 overflow-hidden">
+                        @php
+                            $precoAntigo = (float) ($item->preco_antigo ?? 0);
+                            $precoAtual = (float) ($item->preco_atual ?? 0);
+                            $temDesconto = $precoAntigo > 0 && $precoAtual > 0 && $precoAtual < $precoAntigo;
+                            $percentualDesconto = $temDesconto ? max(1, (int) round((1 - ($precoAtual / $precoAntigo)) * 100)) : 0;
+                            $img = $item->url_imagem ?? $item->imagem ?? 'https://via.placeholder.com/500x320';
+                        @endphp
+                        <article class="swiper-slide promo-card {{ $temDesconto ? 'has-discount' : '' }} overflow-hidden rounded-3xl border bg-white shadow-md {{ $temDesconto ? 'border-red-200' : 'border-slate-100' }}">
                             <div class="relative">
-                                <img src="{{ $item->imagem ?? 'https://via.placeholder.com/300x200' }}" class="w-full h-48 object-cover">
-                                @if($item->preco_antigo)
-                                    <span class="absolute top-2 right-2  px-2 py-1 rounded">
-                                        <i class="fa-solid fa-tag" style="color: #f52727;font-size: 20px"></i>
+                                <img src="{{ $img }}" class="h-52 w-full object-cover">
+                                @if($temDesconto)
+                                    <span class="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full bg-red-600 px-3 py-1 text-xs font-black text-white shadow-lg">
+                                        <i class="fa-solid fa-bolt"></i>
+                                        -{{ $percentualDesconto }}%
                                     </span>
                                 @endif
                             </div>
-                            <div class="p-4">
-                                <h3 class="font-bold text-gray-700 truncate">{{ $item->nome }}</h3>
-                                <div class="mt-2">
-                                    @if($item->preco_antigo)
-                                        <span class="text-xs text-gray-400 line-through">R$ {{ number_format($item->preco_antigo, 2, ',', '.') }}</span>
+
+                            <div class="p-5">
+                                <h3 class="truncate text-lg font-black text-slate-800">{{ $item->nome }}</h3>
+                                <p class="mt-1 text-xs uppercase tracking-[0.18em] text-slate-400">{{ $item->categoria ?? 'Oferta' }}</p>
+
+                                <div class="mt-3">
+                                    @if($temDesconto)
+                                        <span class="text-sm text-slate-400 line-through">R$ {{ number_format($precoAntigo, 2, ',', '.') }}</span>
                                     @endif
-                                    <p class="text-xl font-black text-red-600">R$ {{ number_format($item->preco_atual, 2, ',', '.') }}</p>
+                                    <p class="text-2xl font-black {{ $temDesconto ? 'text-red-600' : 'text-blue-700' }}">R$ {{ number_format($precoAtual, 2, ',', '.') }}</p>
                                 </div>
-                                <form action="{{ route('carrinho.add', $item, false) }}" method="POST" class="mt-3 add-to-cart-form" data-product-id="{{ $item->id }}" onsubmit="return addToCart(event)">
+
+                                <form action="{{ route('carrinho.add', $item, false) }}" method="POST" class="mt-4 add-to-cart-form" onsubmit="return addToCart(event)">
                                     @csrf
                                     <input type="hidden" name="quantidade" value="1">
-                                    <button type="submit" class="w-full bg-slate-800 text-white py-2 rounded-lg text-sm font-bold hover:bg-slate-900 transition disabled:bg-slate-400 disabled:cursor-not-allowed" {{ $item->quantidade <= 0 ? 'disabled' : '' }}>
-                                        {{ $item->quantidade > 0 ? '🛒 Adicionar' : 'Esgotado' }}
+                                    <button type="submit" class="w-full rounded-xl px-4 py-2 text-sm font-black text-white transition {{ $temDesconto ? 'bg-red-600 hover:bg-red-500' : 'bg-slate-800 hover:bg-slate-700' }} disabled:cursor-not-allowed disabled:bg-slate-300" {{ $item->quantidade <= 0 ? 'disabled' : '' }}>
+                                        {{ $item->quantidade > 0 ? 'Adicionar ao pedido' : 'Esgotado' }}
                                     </button>
                                 </form>
                             </div>
-                        </div>
+                        </article>
                     @endforeach
                 </div>
                 <div class="swiper-pagination"></div>
             </div>
-
+            </div>
         </section>
 
-        <hr class="mb-16 border-gray-200">
-
-        <header class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-            <div>
-                <h2 class="text-3xl font-bold text-gray-900">Catálogo Geral</h2>
-                <p class="text-gray-500">Explore todos os nossos produtos em estoque.</p>
-            </div>
-           
-        </header>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    @foreach ($produtosGerais as $produto)
-        <div class="border p-4 rounded-lg shadow-sm bg-white hover:shadow-md transition-all group">
-            <div class="h-40 bg-gray-100 mb-4 rounded flex items-center justify-center overflow-hidden">
-                 <img src="{{ $produto->url_imagem }}" class="group-hover:scale-110 transition-transform duration-300">
-            </div>
-
-            <h3 class="font-bold text-lg text-gray-800 truncate">{{ $produto->nome }}</h3>
-            <p class="text-xs text-gray-400 mb-1">{{ $produto->marca }}</p>
-            
-            <p class="text-sm {{ $produto->quantidade > 0 ? 'text-green-600' : 'text-red-600' }}">
-                Estoque: {{ $produto->quantidade }} un.
-            </p>
-
-            <p class="text-blue-700 font-bold text-xl mt-2 font-mono">
-                R$ {{ number_format($produto->preco_atual, 2, ',', '.') }}
-            </p>
-
-            <form action="{{ route('carrinho.add', $produto, false) }}" method="POST" class="mt-4 add-to-cart-form" data-product-id="{{ $produto->id }}" onsubmit="return addToCart(event)">
-                @csrf
-                <input type="hidden" name="produto_id" value="{{ $produto->id }}">
-                
-                <div class="flex items-center mb-3">
-                    <label class="text-xs font-bold text-gray-400 mr-2 uppercase">Qtd:</label>
-                    <input type="number" name="quantidade" value="1" min="1" max="{{ $produto->quantidade }}" 
-                           class="w-full border border-gray-200 rounded px-2 py-1 text-sm focus:ring-2 focus:ring-blue-200 outline-none">
+        <section id="catalogo">
+            <div class="mb-7 rounded-3xl border border-slate-200 bg-white p-5 shadow-sm md:p-6">
+                <div class="mb-5 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+                    <div>
+                        <h2 class="text-3xl font-black text-slate-900">Catalogo por categoria</h2>
+                        <p class="text-slate-500">Filtro em tempo real por nome, faixa de preco e categoria.</p>
+                    </div>
+                    <button type="button" id="clearFilters" class="rounded-full border border-slate-300 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-slate-700 transition hover:bg-slate-100">Limpar filtros</button>
                 </div>
 
-                <button type="submit" 
-                        {{ $produto->quantidade <= 0 ? 'disabled' : '' }}
-                        class="w-full bg-blue-600 text-white py-2 rounded-md font-medium hover:bg-blue-700 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed">
-                    {{ $produto->quantidade > 0 ? 'Adicionar ao Pedido' : 'Esgotado' }}
-                </button>
-            </form>
-        </div>
-    @endforeach
-</div>
+                <div class="grid gap-3 md:grid-cols-5">
+                    <div class="md:col-span-2">
+                        <label class="mb-1 block text-xs font-black uppercase tracking-[0.2em] text-slate-500">Pesquisa por nome</label>
+                        <div class="relative">
+                            <i class="fa-solid fa-magnifying-glass pointer-events-none absolute left-3 top-3 text-slate-400"></i>
+                            <input id="productSearch" type="text" placeholder="Ex: detergente, arroz, refrigerante" class="w-full rounded-xl border border-slate-200 bg-slate-50 py-2.5 pl-10 pr-3 text-sm outline-none transition focus:border-blue-500 focus:bg-white">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-black uppercase tracking-[0.2em] text-slate-500">Categoria</label>
+                        <select id="categoryFilter" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-white">
+                            <option value="">Todas</option>
+                            @foreach($categoriaLista as $nomeCategoria)
+                                <option value="{{ Illuminate\Support\Str::slug($nomeCategoria) }}">{{ $nomeCategoria }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-black uppercase tracking-[0.2em] text-slate-500">Preco minimo (R$)</label>
+                        <input id="minPriceFilter" type="number" min="0" step="0.01" placeholder="Sem limite" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-white">
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-xs font-black uppercase tracking-[0.2em] text-slate-500">Preco maximo (R$)</label>
+                        <input id="maxPriceFilter" type="number" min="0" step="0.01" placeholder="Sem limite" class="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-2.5 text-sm outline-none transition focus:border-blue-500 focus:bg-white">
+                    </div>
+                </div>
+
+                <div class="mt-4 flex flex-wrap gap-2" id="categoryChips">
+                    @foreach($categoriaLista as $nomeCategoria)
+                        @php $meta = $categoriaMeta[$nomeCategoria] ?? ['slug' => Illuminate\Support\Str::slug($nomeCategoria), 'icone' => 'fa-box-open', 'bg' => 'bg-slate-100 text-slate-700']; @endphp
+                        <button type="button" class="category-chip rounded-full px-3 py-1.5 text-xs font-black uppercase tracking-[0.12em] {{ $meta['bg'] }}" data-category-chip="{{ $meta['slug'] }}">
+                            <i class="fa-solid {{ $meta['icone'] }} mr-1"></i>{{ $nomeCategoria }}
+                        </button>
+                    @endforeach
+                </div>
+            </div>
+
+            <div id="globalEmptyState" class="hidden rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
+                Nenhum produto encontrado com os filtros atuais.
+            </div>
+
+            <div class="space-y-10" id="catalogSections">
+                @foreach($categoriaLista as $nomeCategoria)
+                    @php
+                        $slug = Illuminate\Support\Str::slug($nomeCategoria);
+                        $meta = $categoriaMeta[$nomeCategoria] ?? ['slug' => $slug, 'icone' => 'fa-box-open', 'cores' => 'from-slate-600 to-slate-500', 'bg' => 'bg-slate-100 text-slate-700'];
+                        $produtosCategoria = $produtosPorCategoria->get($nomeCategoria, collect())->values();
+                    @endphp
+
+                    <section class="categoria-bloco" data-category-section="{{ $slug }}" data-category-name="{{ Illuminate\Support\Str::lower($nomeCategoria) }}">
+                        <div class="mb-4 flex items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br {{ $meta['cores'] }} text-white shadow">
+                                    <i class="fa-solid {{ $meta['icone'] }}"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-xl font-black text-slate-900">{{ $nomeCategoria }}</h3>
+                                    <div class="mt-1 flex flex-wrap items-center gap-2">
+                                        <p class="text-sm text-slate-500"><span data-visible-count>0</span> itens visiveis</p>
+                                        <span class="batch-pill">Lote <span data-batch-label>01/01</span></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap gap-2">
+                                <button type="button" class="prev-more-btn hidden rounded-full border border-slate-300 px-3 py-1.5 text-xs font-black uppercase tracking-[0.15em] text-slate-700 hover:bg-slate-100" data-prev-lot="{{ $slug }}">Lote Anterior</button>
+                                <button type="button" class="show-more-btn hidden rounded-full border border-slate-300 px-3 py-1.5 text-xs font-black uppercase tracking-[0.15em] text-slate-700 hover:bg-slate-100" data-show-more="{{ $slug }}">Próximo lote</button>
+                            </div>
+                        </div>
+
+                        <div class="category-grid grid gap-5 sm:grid-cols-2 xl:grid-cols-3" data-category-grid>
+                            @foreach($produtosCategoria as $produto)
+                                @php
+                                    $preco = (float) ($produto->preco_atual ?? 0);
+                                    $precoAntigo = (float) ($produto->preco_antigo ?? 0);
+                                    $temDesconto = $precoAntigo > 0 && $preco > 0 && $preco < $precoAntigo;
+                                    $percentual = $temDesconto ? max(1, (int) round((1 - ($preco / $precoAntigo)) * 100)) : 0;
+                                @endphp
+                                <article class="product-card overflow-hidden rounded-2xl border border-slate-100 bg-white p-4 shadow-sm"
+                                    data-product-card
+                                    data-product-name="{{ Illuminate\Support\Str::lower($produto->nome) }}"
+                                    data-product-price="{{ $preco }}"
+                                    data-product-category="{{ $slug }}"
+                                    data-product-card-index="{{ $loop->index }}">
+                                    <div class="relative mb-4 overflow-hidden rounded-xl bg-slate-100">
+                                        <img src="{{ $produto->url_imagem }}" class="h-44 w-full object-cover transition duration-300 hover:scale-105" alt="{{ $produto->nome }}">
+                                        @if($temDesconto)
+                                            <span class="absolute left-2 top-2 rounded-full bg-red-600 px-2 py-1 text-[11px] font-black text-white">-{{ $percentual }}%</span>
+                                        @endif
+                                    </div>
+
+                                    <div class="mb-3 flex items-start justify-between gap-2">
+                                        <div>
+                                            <h4 class="line-clamp-2 text-base font-black text-slate-900">{{ $produto->nome }}</h4>
+                                            <p class="text-xs text-slate-500">{{ $produto->marca ?? 'Marca nao informada' }}</p>
+                                        </div>
+                                        <span class="rounded-full px-2 py-1 text-[10px] font-black uppercase tracking-wide {{ $meta['bg'] }}">{{ $nomeCategoria }}</span>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        @if($temDesconto)
+                                            <p class="text-xs text-slate-400 line-through">R$ {{ number_format($precoAntigo, 2, ',', '.') }}</p>
+                                        @endif
+                                        <p class="text-2xl font-black text-blue-700">R$ {{ number_format($preco, 2, ',', '.') }}</p>
+                                        <p class="text-xs {{ $produto->quantidade > 0 ? 'text-emerald-600' : 'text-red-600' }}">Estoque: {{ $produto->quantidade }} un.</p>
+                                    </div>
+
+                                    <form action="{{ route('carrinho.add', $produto, false) }}" method="POST" onsubmit="return addToCart(event)">
+                                        @csrf
+                                        <div class="mb-2 flex items-center gap-2">
+                                            <label class="text-xs font-black uppercase text-slate-400">Qtd</label>
+                                            <input type="number" name="quantidade" value="1" min="1" max="{{ $produto->quantidade }}" class="w-full rounded-lg border border-slate-200 px-2 py-1.5 text-sm outline-none focus:border-blue-500">
+                                        </div>
+                                        <button type="submit" class="w-full rounded-xl bg-blue-700 py-2 text-sm font-black text-white transition hover:bg-blue-600 disabled:cursor-not-allowed disabled:bg-slate-300" {{ $produto->quantidade <= 0 ? 'disabled' : '' }}>
+                                            {{ $produto->quantidade > 0 ? 'Adicionar ao pedido' : 'Esgotado' }}
+                                        </button>
+                                    </form>
+                                </article>
+                            @endforeach
+                        </div>
+
+                        <div class="hidden rounded-xl border border-dashed border-slate-300 bg-white p-4 text-center text-sm text-slate-500" data-empty-category>
+                            Nenhum produto desta categoria corresponde ao filtro atual.
+                        </div>
+                    </section>
+                @endforeach
+            </div>
+        </section>
     </main>
 
-    <footer class="mt-20 border-t border-gray-200 bg-white p-8 text-center text-gray-400 text-sm">
+    <footer class="mt-20 border-t border-slate-200 bg-white/80 p-8 text-center text-sm text-slate-500">
         &copy; {{ date('Y') }} Distribuidora Foccus - Todos os direitos reservados.
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    
-    <!-- Modal do Carrinho -->
-    <div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50 p-4">
-        <div class="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[80vh] flex flex-col">
-            <!-- Header -->
-            <div class="flex justify-between items-center p-6 border-b">
-                <h2 class="text-xl font-bold">Meu Carrinho</h2>
-                <button onclick="closeCartModal()" class="text-gray-500 hover:text-gray-700">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <div id="cartModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/55 p-4">
+        <div class="flex max-h-[80vh] w-full max-w-md flex-col rounded-2xl bg-white shadow-xl">
+            <div class="flex items-center justify-between border-b p-6">
+                <h2 class="text-xl font-black">Meu Carrinho</h2>
+                <button onclick="closeCartModal()" class="text-slate-500 transition hover:text-slate-700">
+                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
-            
-            <!-- Conteúdo -->
+
             <div class="flex-1 overflow-y-auto p-6" id="cartContent">
-                <p class="text-center text-gray-500">Carregando...</p>
+                <p class="text-center text-slate-500">Carregando...</p>
             </div>
-            
-            <!-- Rodapé -->
-            <div class="border-t p-6 space-y-2">
-                <div class="flex justify-between text-lg font-bold">
+
+            <div class="space-y-2 border-t p-6">
+                <div class="flex justify-between text-lg font-black">
                     <span>Total:</span>
                     <span id="cartTotal">R$ 0,00</span>
                 </div>
-                <button onclick="finalizarPedido()" class="w-full bg-green-600 text-white py-2 rounded-lg font-bold hover:bg-green-700 transition">
-                    Finalizar Pedido
-                </button>
-                <button onclick="closeCartModal()" class="w-full bg-gray-300 text-gray-800 py-2 rounded-lg font-bold hover:bg-gray-400 transition">
-                    Continuar Comprando
-                </button>
+                <button onclick="finalizarPedido()" class="w-full rounded-lg bg-emerald-600 py-2 font-black text-white transition hover:bg-emerald-500">Finalizar pedido</button>
+                <button onclick="closeCartModal()" class="w-full rounded-lg bg-slate-200 py-2 font-black text-slate-700 transition hover:bg-slate-300">Continuar comprando</button>
             </div>
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+
     <script>
+        document.documentElement.classList.add('js');
+
         const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
             document.querySelector('input[name="_token"]')?.value;
 
@@ -347,24 +544,270 @@
             axios.defaults.headers.common['X-CSRF-TOKEN'] = csrfToken;
         }
 
-        // Adicionar event listeners aos formulários de carrinho
         document.addEventListener('DOMContentLoaded', function() {
-            // Atualizar badge do carrinho ao carregar
+            initReveals();
+            initSwiper();
+            initCatalogFilters();
             updateCartBadge();
         });
+
+        function initReveals() {
+            const blocks = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('show');
+                    }
+                });
+            }, { threshold: 0.15 });
+
+            blocks.forEach((block) => observer.observe(block));
+        }
+
+        function initSwiper() {
+            const counterCurrent = document.getElementById('offerCounterCurrent');
+            const counterRoot = document.getElementById('offerCounter');
+            const total = parseInt(counterRoot?.dataset.total || '1', 10);
+
+            const swiper = new Swiper('.mySwiper', {
+                slidesPerView: 1.15,
+                spaceBetween: 18,
+                loop: true,
+                speed: 850,
+                autoplay: {
+                    delay: 3000,
+                    disableOnInteraction: false,
+                },
+                breakpoints: {
+                    640: { slidesPerView: 2, spaceBetween: 18 },
+                    1024: { slidesPerView: 3, spaceBetween: 22 },
+                },
+            });
+
+            function updateOfferCounter() {
+                if (!counterCurrent) return;
+                const current = swiper.realIndex + 1;
+                const pad = (num) => String(Math.max(1, num)).padStart(2, '0');
+                counterCurrent.textContent = pad(current);
+                const totalEl = document.getElementById('offerCounterTotal');
+                if (totalEl) {
+                    totalEl.textContent = pad(total);
+                }
+            }
+
+            updateOfferCounter();
+            swiper.on('slideChange', updateOfferCounter);
+
+            if (swiper.el) {
+                swiper.el.addEventListener('mouseenter', () => swiper.autoplay.stop());
+                swiper.el.addEventListener('mouseleave', () => swiper.autoplay.start());
+            }
+        }
+
+        function initCatalogFilters() {
+            const searchInput = document.getElementById('productSearch');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const minPriceFilter = document.getElementById('minPriceFilter');
+            const maxPriceFilter = document.getElementById('maxPriceFilter');
+            const clearBtn = document.getElementById('clearFilters');
+            const chips = Array.from(document.querySelectorAll('[data-category-chip]'));
+            const sections = Array.from(document.querySelectorAll('[data-category-section]'));
+            const globalEmptyState = document.getElementById('globalEmptyState');
+
+            const VISIBLE_LIMIT = 6;
+            const sectionPages = new Map();
+
+            chips.forEach((chip) => {
+                chip.addEventListener('click', () => {
+                    const slug = chip.dataset.categoryChip;
+                    if (categoryFilter.value === slug) {
+                        categoryFilter.value = '';
+                    } else {
+                        categoryFilter.value = slug;
+                    }
+                    resetPages();
+                    applyFilters();
+                });
+            });
+
+            sections.forEach((section) => {
+                const sectionSlug = section.dataset.categorySection;
+                const nextButton = section.querySelector('[data-show-more]');
+                const prevButton = section.querySelector('[data-prev-lot]');
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        const nextPage = (sectionPages.get(sectionSlug) || 0) + 1;
+                        sectionPages.set(sectionSlug, nextPage);
+                        animateSection(section);
+                        window.setTimeout(applyFilters, 140);
+                    });
+                }
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        const currentPage = sectionPages.get(sectionSlug) || 0;
+                        const prevPage = Math.max(0, currentPage - 1);
+                        sectionPages.set(sectionSlug, prevPage);
+                        animateSection(section);
+                        window.setTimeout(applyFilters, 140);
+                    });
+                }
+            });
+
+            [searchInput, categoryFilter, minPriceFilter, maxPriceFilter].forEach((el) => {
+                el?.addEventListener('input', () => {
+                    resetPages();
+                    applyFilters();
+                });
+                el?.addEventListener('change', () => {
+                    resetPages();
+                    applyFilters();
+                });
+            });
+
+            clearBtn?.addEventListener('click', () => {
+                searchInput.value = '';
+                categoryFilter.value = '';
+                minPriceFilter.value = '';
+                maxPriceFilter.value = '';
+                sectionPages.clear();
+                applyFilters();
+            });
+
+            function resetPages() {
+                sectionPages.clear();
+            }
+
+            function animateSection(section) {
+                const grid = section.querySelector('[data-category-grid]');
+                if (!grid) return;
+
+                grid.classList.add('is-switching');
+                window.setTimeout(() => grid.classList.remove('is-switching'), 220);
+            }
+
+            function normalize(value) {
+                return (value || '').toString().trim().toLowerCase();
+            }
+
+            function applyFilters() {
+                const nameTerm = normalize(searchInput?.value);
+                const selectedCategory = categoryFilter?.value || '';
+                const minPrice = parseFloat(minPriceFilter?.value || '');
+                const maxPrice = parseFloat(maxPriceFilter?.value || '');
+                const hasMinPrice = !Number.isNaN(minPrice);
+                const hasMaxPrice = !Number.isNaN(maxPrice);
+
+                let totalVisible = 0;
+
+                chips.forEach((chip) => {
+                    chip.classList.toggle('active', chip.dataset.categoryChip === selectedCategory && selectedCategory !== '');
+                });
+
+                sections.forEach((section) => {
+                    const sectionSlug = section.dataset.categorySection;
+                    const cards = Array.from(section.querySelectorAll('[data-product-card]'));
+                    const emptyCategory = section.querySelector('[data-empty-category]');
+                    const visibleCountLabel = section.querySelector('[data-visible-count]');
+                    const showMoreBtn = section.querySelector('[data-show-more]');
+                    const prevBtn = section.querySelector('[data-prev-lot]');
+                    const batchLabel = section.querySelector('[data-batch-label]');
+                    const grid = section.querySelector('[data-category-grid]');
+
+                    const matchingCards = cards.filter((card) => {
+                        const productName = normalize(card.dataset.productName);
+                        const productCategory = card.dataset.productCategory;
+                        const productPrice = parseFloat(card.dataset.productPrice || '0');
+
+                        const nameMatch = !nameTerm || productName.includes(nameTerm);
+                        const categoryMatch = !selectedCategory || selectedCategory === productCategory;
+                        const minPriceMatch = !hasMinPrice || productPrice >= minPrice;
+                        const maxPriceMatch = !hasMaxPrice || productPrice <= maxPrice;
+
+                        return nameMatch && categoryMatch && minPriceMatch && maxPriceMatch;
+                    });
+
+                    const filtersActive = Boolean(nameTerm || selectedCategory || hasMinPrice || hasMaxPrice);
+                    const totalPages = Math.max(1, Math.ceil(matchingCards.length / VISIBLE_LIMIT));
+                    const maxPageIndex = Math.max(0, totalPages - 1);
+                    const requestedPage = sectionPages.get(sectionSlug) || 0;
+                    const page = Math.min(requestedPage, maxPageIndex);
+
+                    if (requestedPage !== page) {
+                        sectionPages.set(sectionSlug, page);
+                    }
+
+                    const startIndex = page * VISIBLE_LIMIT;
+                    const endIndex = startIndex + VISIBLE_LIMIT;
+                    const currentBatch = matchingCards.length === 0 ? 0 : page + 1;
+
+                    cards.forEach((card) => {
+                        card.classList.add('hidden');
+                    });
+
+                    const visibleBatch = matchingCards.slice(startIndex, endIndex);
+
+                    visibleBatch.forEach((card) => {
+                        card.classList.remove('hidden');
+                    });
+
+                    const visibleInSection = visibleBatch.length;
+                    totalVisible += visibleInSection;
+
+                    if (visibleCountLabel) {
+                        visibleCountLabel.textContent = visibleInSection.toString();
+                    }
+
+                    if (batchLabel) {
+                        batchLabel.textContent = `${String(currentBatch || 1).padStart(2, '0')}/${String(totalPages).padStart(2, '0')}`;
+                    }
+
+                    if (emptyCategory) {
+                        emptyCategory.classList.toggle('hidden', matchingCards.length > 0);
+                    }
+
+                    if (showMoreBtn) {
+                        const hasMore = endIndex < matchingCards.length;
+                        const showButton = hasMore && matchingCards.length > VISIBLE_LIMIT;
+                        showMoreBtn.classList.toggle('hidden', !showButton);
+                        if (showButton) {
+                            showMoreBtn.textContent = filtersActive ? 'Próximos resultados' : 'Próximo lote';
+                        }
+                    }
+
+                    if (prevBtn) {
+                        const showPrev = page > 0;
+                        prevBtn.classList.toggle('hidden', !showPrev);
+                        if (showPrev) {
+                            prevBtn.textContent = 'Lote anterior';
+                        }
+                    }
+
+                    section.classList.toggle('hidden', filtersActive && matchingCards.length === 0);
+                });
+
+                if (globalEmptyState) {
+                    globalEmptyState.classList.toggle('hidden', totalVisible > 0);
+                }
+            }
+
+            applyFilters();
+        }
 
         function openCartModal() {
             loadCart();
             document.getElementById('cartModal').classList.remove('hidden');
+            document.getElementById('cartModal').classList.add('flex');
         }
 
         function closeCartModal() {
             document.getElementById('cartModal').classList.add('hidden');
+            document.getElementById('cartModal').classList.remove('flex');
         }
 
         function addToCart(event) {
             event.preventDefault();
-            
+
             const form = event.currentTarget || event.target;
             const quantidadeInput = form.querySelector('input[name="quantidade"]');
             const quantidade = quantidadeInput ? quantidadeInput.value : 1;
@@ -374,19 +817,14 @@
                 showNotification('Erro ao adicionar ao carrinho', 'error');
                 return false;
             }
-            
-            axios.post(url, {
-                quantidade: quantidade
-            }, {
-                headers: {
-                    'Accept': 'application/json'
-                }
+
+            axios.post(url, { quantidade }, {
+                headers: { 'Accept': 'application/json' }
             })
             .then(response => {
                 if (response.data.success) {
                     showNotification(response.data.message, 'success');
                     updateCartBadge();
-                    // Abrir o modal
                     if (!document.getElementById('cartModal').classList.contains('hidden')) {
                         loadCart();
                     }
@@ -407,46 +845,45 @@
                 .then(response => {
                     renderCart(response.data);
                 })
-                .catch(error => {
-                    document.getElementById('cartContent').innerHTML = 
-                        '<p class="text-center text-red-500">Erro ao carregar carrinho</p>';
+                .catch(() => {
+                    document.getElementById('cartContent').innerHTML = '<p class="text-center text-red-500">Erro ao carregar carrinho</p>';
                 });
         }
 
         function renderCart(data) {
-            const { carrinho, total, quantidadeTotal } = data;
+            const { carrinho, total } = data;
             const cartContent = document.getElementById('cartContent');
-            
+
             if (carrinho.length === 0) {
-                cartContent.innerHTML = '<p class="text-center text-gray-500 py-8">Carrinho vazio</p>';
+                cartContent.innerHTML = '<p class="py-8 text-center text-slate-500">Carrinho vazio</p>';
                 document.getElementById('cartTotal').textContent = 'R$ 0,00';
                 return;
             }
-            
+
             let html = '<div class="space-y-4">';
-            
+
             carrinho.forEach(item => {
                 const produto = item.produto;
                 html += `
-                    <div class="border rounded-lg p-3 flex items-start justify-between hover:bg-gray-50">
+                    <div class="flex items-start justify-between rounded-lg border p-3 hover:bg-slate-50">
                         <div class="flex-1">
-                            <p class="font-bold text-sm">${produto.nome}</p>
-                            <p class="text-xs text-gray-500">${produto.marca}</p>
-                            <p class="text-sm font-bold mt-1">R$ ${formatPrice(produto.preco_atual)}</p>
-                            <div class="flex items-center gap-2 mt-2">
-                                <button onclick="updateQuantity(${produto.id}, ${item.quantidade - 1})" class="px-2 py-1 bg-gray-200 rounded text-xs hover:bg-gray-300">-</button>
-                                <span class="text-sm font-bold px-2">${item.quantidade}</span>
-                                <button onclick="updateQuantity(${produto.id}, ${item.quantidade + 1})" class="px-2 py-1 bg-gray-200 rounded text-xs hover:bg-gray-300">+</button>
+                            <p class="text-sm font-black">${produto.nome}</p>
+                            <p class="text-xs text-slate-500">${produto.marca ?? ''}</p>
+                            <p class="mt-1 text-sm font-bold">R$ ${formatPrice(produto.preco_atual)}</p>
+                            <div class="mt-2 flex items-center gap-2">
+                                <button onclick="updateQuantity(${produto.id}, ${item.quantidade - 1})" class="rounded bg-slate-200 px-2 py-1 text-xs hover:bg-slate-300">-</button>
+                                <span class="px-2 text-sm font-bold">${item.quantidade}</span>
+                                <button onclick="updateQuantity(${produto.id}, ${item.quantidade + 1})" class="rounded bg-slate-200 px-2 py-1 text-xs hover:bg-slate-300">+</button>
                             </div>
                         </div>
-                        <div class="text-right ml-2">
-                            <p class="font-bold text-sm">R$ ${formatPrice(item.subtotal)}</p>
-                            <button onclick="removeFromCart(${produto.id})" class="text-red-500 text-xs hover:text-red-700 mt-2">Remover</button>
+                        <div class="ml-2 text-right">
+                            <p class="text-sm font-black">R$ ${formatPrice(item.subtotal)}</p>
+                            <button onclick="removeFromCart(${produto.id})" class="mt-2 text-xs text-red-500 hover:text-red-700">Remover</button>
                         </div>
                     </div>
                 `;
             });
-            
+
             html += '</div>';
             cartContent.innerHTML = html;
             document.getElementById('cartTotal').textContent = `R$ ${formatPrice(total)}`;
@@ -457,32 +894,22 @@
                 removeFromCart(productId);
                 return;
             }
-            
-            const url = `/carrinho/${productId}`;
-            
-            axios.put(url, {
-                quantidade: newQuantidade
-            }, {
-                headers: {
-                    'Accept': 'application/json'
-                }
+
+            axios.put(`/carrinho/${productId}`, { quantidade: newQuantidade }, {
+                headers: { 'Accept': 'application/json' }
             })
-            .then(response => {
+            .then(() => {
                 loadCart();
                 updateCartBadge();
             })
-            .catch(error => {
+            .catch(() => {
                 showNotification('Erro ao atualizar quantidade', 'error');
             });
         }
 
         function removeFromCart(productId) {
-            const url = `/carrinho/${productId}`;
-            
-            axios.delete(url, {
-                headers: {
-                    'Accept': 'application/json'
-                }
+            axios.delete(`/carrinho/${productId}`, {
+                headers: { 'Accept': 'application/json' }
             })
             .then(response => {
                 if (response.data && response.data.carrinho) {
@@ -494,84 +921,60 @@
                 }
                 showNotification(response.data?.message || 'Produto removido do carrinho', 'success');
             })
-            .catch(error => {
+            .catch(() => {
                 showNotification('Erro ao remover produto', 'error');
             });
         }
 
         function updateCartBadgeValue(quantidade) {
             const badge = document.getElementById('carrinhoCountBadge');
-
-            if (!badge) {
-                return;
-            }
+            if (!badge) return;
 
             if (quantidade > 0) {
                 badge.textContent = quantidade;
-                badge.style.display = 'flex';
+                badge.classList.remove('hidden');
+                badge.classList.add('flex');
             } else {
-                badge.style.display = 'none';
+                badge.classList.remove('flex');
+                badge.classList.add('hidden');
             }
         }
 
         function updateCartBadge() {
-            axios.get('/api/carrinho')
-                .then(response => {
-                    updateCartBadgeValue(response.data.quantidadeTotal || 0);
-                });
+            axios.get('/api/carrinho').then(response => {
+                updateCartBadgeValue(response.data.quantidadeTotal || 0);
+            });
         }
 
         function formatPrice(price) {
-            return parseFloat(price).toLocaleString('pt-BR', { 
-                minimumFractionDigits: 2, 
-                maximumFractionDigits: 2 
+            return parseFloat(price).toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
             });
         }
 
         function showNotification(message, type) {
-            // Criar elemento de notificação
             const notification = document.createElement('div');
-            notification.className = `fixed top-4 right-4 px-4 py-3 rounded-lg text-sm font-bold z-50 ${
-                type === 'success' 
-                    ? 'bg-green-100 text-green-700 border border-green-200' 
-                    : 'bg-red-100 text-red-700 border border-red-200'
+            notification.className = `fixed right-4 top-4 z-50 rounded-lg border px-4 py-3 text-sm font-bold ${
+                type === 'success'
+                    ? 'border-emerald-200 bg-emerald-100 text-emerald-700'
+                    : 'border-red-200 bg-red-100 text-red-700'
             }`;
             notification.textContent = message;
             document.body.appendChild(notification);
-            
-            // Remover após 3 segundos
-            setTimeout(() => {
-                notification.remove();
-            }, 3000);
+
+            setTimeout(() => notification.remove(), 3000);
         }
 
         function finalizarPedido() {
-            alert('Finalizar pedido - Funcionalidade a implementar');
-            // Implementar lógica de finalizar pedido
+            window.location.href = '/checkout';
         }
 
-        // Fechar modal ao clicar fora dele
         document.getElementById('cartModal')?.addEventListener('click', function(e) {
             if (e.target === this) {
                 closeCartModal();
             }
         });
     </script>
-    
-    <script>
-        var swiper = new Swiper(".mySwiper", {
-            slidesPerView: 1,
-            spaceBetween: 25,
-            loop: true,
-            autoplay: { delay: 4000 },
-            pagination: { el: ".swiper-pagination", clickable: true },
-            navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
-            breakpoints: {
-                640: { slidesPerView: 2 },
-                1024: { slidesPerView: 4 },
-            },
-        });
-    </script>
 </body>
-</html>
 </html>

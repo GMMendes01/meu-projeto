@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CarrinhoController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UserController;
 
@@ -24,6 +25,10 @@ Route::post('/carrinho/{produto}', [CarrinhoController::class, 'store'])->name('
 Route::put('/carrinho/{produto}', [CarrinhoController::class, 'update'])->name('carrinho.update');
 Route::delete('/carrinho/{produto}', [CarrinhoController::class, 'destroy'])->name('carrinho.remove');
 Route::delete('/carrinho', [CarrinhoController::class, 'clear'])->name('carrinho.clear');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::get('/checkout/processar', fn () => redirect()->route('checkout.index'));
+Route::post('/checkout/processar', [CheckoutController::class, 'finalizar'])->name('checkout.processar');
+Route::get('/checkout/retorno', [CheckoutController::class, 'retorno'])->name('checkout.retorno');
 
 //Rotas de Conta
 Route::get('/meusdados',[UserController::class, 'meusdados']);
