@@ -194,6 +194,55 @@
         .batch-pill span {
             color: #38bdf8;
         }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    background-color:white;
+    padding:10px;
+    border-radius:20px;
+    font-size:12px;
+    font-weight:bold;
+}  
+
+
+.dropdown:hover{
+ background-color: #334155;
+ transition:1s;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    min-width: 150px;
+}
+
+.dropdown-content a,
+.dropdown-content button {
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    color:#424242;
+}
+
+.dropdown-content a:hover {
+    background-color:#ccc;
+}
+
+.dropdown-content button:hover {
+    background-color:#ccc;
+}
+
+.dropdown-content.show {
+    display: block;
+}
+
     </style>
 </head>
 <body class="min-h-screen text-slate-900">
@@ -245,9 +294,36 @@
             </div>
 
             <div class="flex items-center gap-3">
-                @auth
-                    <div class="hidden rounded-full bg-white/10 px-4 py-2 text-xs font-semibold text-slate-100 md:block">Ola, {{ auth()->user()->name }}</div>
-                @endauth
+            @auth
+                <div class="dropdown">
+                    <button onclick="toggleMenu()" class="dropbtn">
+                      Olá, {{ auth()->user()->name }}
+                    </button>
+                    <div id="menu" class="dropdown-content">
+                         <a target="_blank" href="/meusdados">Meus dados</a>
+                         <a target="_blank" href="/">Meus Pedidos</a>
+                         <form method="POST" action="/logout">
+                        @csrf
+                         <button type="submit">Sair</button>
+                        </form>
+                    </div>
+                </div>
+                <script>
+                    function toggleMenu() {
+                        document.getElementById("menu").classList.toggle("show");
+                    }
+
+                    // fechar ao clicar fora
+                        window.onclick = function(event) {
+                            if (!event.target.matches('.dropbtn')) {
+                                let menu = document.getElementById("menu");
+                                if (menu && menu.classList.contains('show')) {
+                                    menu.classList.remove('show');
+                                }
+                            }
+                        }
+                </script>
+            @endauth
                 @guest
                     <a href="/login" class="hidden text-sm font-semibold text-slate-100 transition hover:text-white md:inline">Entrar</a>
                     <a href="/register" class="hidden rounded-full bg-white px-4 py-2 text-sm font-black text-slate-900 transition hover:bg-slate-100 md:inline">Cadastrar</a>
