@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html class="scroll-smooth" lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -203,12 +203,13 @@
     border-radius:20px;
     font-size:12px;
     font-weight:bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
 }  
 
 
 .dropdown:hover{
- background-color: #334155;
- transition:1s;
+ background-color: #a9abae;
+transform: translateY(-2px);
 }
 
 .dropdown-content {
@@ -241,6 +242,30 @@
 
 .dropdown-content.show {
     display: block;
+}
+
+.conteiner-img{
+    position:absolute;
+    color:white;
+    top:75%;
+    left: 12%;
+    width: 26%;
+    display:flex;
+    justify-content:space-between;
+}
+
+.conteiner-img a{
+padding: 10px;
+font-size: small;
+border-radius:20px;
+background-color:#5f6f86;
+font-weight: 500 ;
+transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.conteiner-img a:hover{
+transform: translateY(-2px);
+background-color:#a9abae;
 }
 
     </style>
@@ -281,16 +306,26 @@
             $categoriaMeta[$nomeCategoria] = $meta;
         }
     @endphp
-
+    <div class="w-full text-center text-white bg-slate-600 font-sans text-sm"><p>Ofertas Imperdiveis 🔥</p></div>
     <nav class="glass sticky top-0 z-50 border-b border-white/10">
         <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 md:px-8">
             <a href="/" class="shrink-0">
                 <img src="/LOGO_FOCCUS.png" class="w-36 brightness-0 invert md:w-40" alt="Logo Foccus">
             </a>
 
-            <div class="hidden flex-1 items-center gap-3 lg:flex">
-                <div class="rounded-full bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-slate-200">Portal B2B</div>
-                <div class="rounded-full bg-white/10 px-4 py-2 text-xs text-slate-200">Entrega em todo Brasil</div>
+
+            <div class="flex-1 max-w-md hidden lg:block">
+                <form action="/search" method="GET" class="relative">
+                    <input type="text" 
+                        name="q" 
+                        placeholder="O que você procura hoje?" 
+                        class="w-full bg-slate-600 text-white text-sm rounded-full py-2 px-10 focus:outline-none focus:ring-2 focus:ring-slate-300 placeholder-slate-300 transition-all border border-transparent focus:bg-slate-700">
+                    <div class="absolute left-3 top-2.5 text-slate-300">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                        </svg>
+                    </div>
+                </form>
             </div>
 
             <div class="flex items-center gap-3">
@@ -328,7 +363,7 @@
                     <a href="/login" class="hidden text-sm font-semibold text-slate-100 transition hover:text-white md:inline">Entrar</a>
                     <a href="/register" class="hidden rounded-full bg-white px-4 py-2 text-sm font-black text-slate-900 transition hover:bg-slate-100 md:inline">Cadastrar</a>
                 @endguest
-
+                <h1 class="text-white">|</h1>
                 <button type="button" class="relative flex items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-black text-slate-900 transition hover:bg-slate-100" id="btnCart" onclick="openCartModal()">
                     <span>🛒</span>
                     <span class="hidden md:inline">Carrinho</span>
@@ -347,32 +382,18 @@
     @endif
 
     <main class="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-10">
-        <section class="animated-bg reveal relative mb-14 overflow-hidden rounded-3xl border border-slate-200/80 bg-white/70 p-6 shadow-lg md:p-10">
-            <div class="relative z-10 grid items-center gap-8 lg:grid-cols-[1.2fr_1fr]">
-                <div>
-                    <p class="text-xs font-black uppercase tracking-[0.3em] text-blue-700">Distribuidora Foccus</p>
-                    <h1 class="mt-4 text-3xl font-black leading-tight text-slate-900 md:text-5xl">Compras inteligentes com foco em margem e giro.</h1>
-                    <p class="mt-4 max-w-2xl text-slate-600 md:text-lg">Catálogo segmentado por categorias, ofertas em destaque e experiência otimizada para pedidos rápidos no atacado.</p>
-
-                    <div class="mt-6 flex flex-wrap gap-3">
-                        <a href="#ofertas" class="rounded-full bg-blue-700 px-5 py-3 text-sm font-black text-white transition hover:bg-blue-600">Ver ofertas da semana</a>
-                        <a href="#catalogo" class="rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-black text-slate-700 transition hover:bg-slate-50">Explorar catálogo</a>
-                    </div>
-                </div>
-
-                <div class="hero-banner-wrap overflow-hidden">
-                    <div class="absolute left-4 top-4 z-10 rounded-full bg-white/15 px-3 py-1 text-[10px] font-black uppercase tracking-[0.24em] text-white backdrop-blur">
-                        Destaque da semana
-                    </div>
-                    <img class="h-[320px] w-full rounded-2xl object-cover md:h-[420px] lg:h-[520px]" src="/Banner1.png" alt="Banner da semana">
-                </div>
+        <section class=" reveal mb-14  shadow-lg">
+            <img width="100%" class="w-full w-screen" src="{{ asset('Banner1.png') }}" alt="carrosel 1 imagem" widtch:>
+            <div class="conteiner-img">
+                <a href="#ofertas" class=" ">Ofertas da Semana 🔥</a>
+                <a href="#catalogo" class="">Catalogo de produtos</a>
             </div>
         </section>
 
         <section id="ofertas" class="reveal mb-16">
             <div class="mb-6 flex items-center justify-between gap-3">
                 <div class="flex items-center gap-3">
-                    <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100 text-red-600"><i class="fa-solid fa-fire"></i></span>
+                    <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-red-100 text-red-600"><i class="fa-solid fa-fire text-4xl"></i></span>
                     <div>
                         <h2 class="text-2xl font-black text-slate-900">Ofertas da semana</h2>
                         <p class="text-sm text-slate-500">Carrossel em rolagem continua, pausado no hover.</p>
