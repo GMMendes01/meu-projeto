@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Services\ProductImageResolver;
 use Illuminate\Database\Eloquent\Model;
 
 class Produto extends Model
@@ -17,18 +18,30 @@ class Produto extends Model
         'quantidade',
         'marca',
         'categoria',
+        'imagem_url',
         'destaque',
         'ativo',
     ];
-public function getUrlImagemAttribute()
-{
-    if ($this->imagem && file_exists(public_path('storage/' . $this->imagem))) {
-        return asset('storage/' . $this->imagem);
-    }
 
-    // Retorna o placeholder se a imagem não existir
-    return "https://placehold.co/400x400/e2e8f0/1e293b?text=" . urlencode($this->nome);
-}
+    protected $appends = ['url_imagem'];
+
+    public function getUrlImagemAttribute()
+    {
+        if (!empty($this->attributes['imagem_url'] ?? null)) {
+            return $this->attributes['imagem_url'];
+        }
+
+        if (isset($this->attributes['imagem']) && file_exists(public_path('storage/' . $this->attributes['imagem']))) {
+            return asset('storage/' . $this->attributes['imagem']);
+        }
+
+        return app(ProductImageResolver::class)->resolve(
+            $this->nome,
+            $this->marca,
+            $this->categoria,
+            $this->codigo_barras,
+        );
+    }
    
     protected $casts = [
         'preco_antigo' => 'decimal:2',

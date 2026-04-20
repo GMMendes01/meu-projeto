@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Produto;
+use App\Services\ProductImageResolver;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Str;
 
@@ -11,6 +12,7 @@ class ProdutoSeeder extends Seeder
     public function run(): void
     {
         $filePath = base_path("database/data/ESTOQUE_VIRTUS_032026.csv");
+        $resolver = app(ProductImageResolver::class);
 
         if (($handle = fopen($filePath, "r")) !== FALSE) {
             // Pula o cabeçalho
@@ -41,6 +43,12 @@ class ProdutoSeeder extends Seeder
                     'quantidade'     => rand(10, 100),
                     'marca'          => $data[2] ?? 'Foccus',
                     'categoria'      => $data[3] ?? 'Geral',
+                    'imagem_url'     => $resolver->resolve(
+                        ucfirst(mb_strtolower($data[1])),
+                        $data[2] ?? 'Foccus',
+                        $data[3] ?? 'Geral',
+                        $data[0] ?? null,
+                    ),
                     'destaque'       => rand(0, 1),
                     'ativo'          => true,
                 ]);

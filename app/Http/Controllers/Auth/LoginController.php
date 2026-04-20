@@ -30,7 +30,11 @@ class LoginController extends Controller
             // Gera uma nova sessão por segurança
             $request->session()->regenerate();
 
-            // Redireciona para onde ele tentou ir ou para a home
+            // Redireciona para o dashboard se for admin, senão para home
+            if (Auth::user()->is_admin) {
+                return redirect()->intended(route('admin.dashboard'));
+            }
+
             return redirect()->intended('/');
         }
 

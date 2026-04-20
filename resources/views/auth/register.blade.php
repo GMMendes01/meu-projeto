@@ -11,7 +11,7 @@
     <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:flex-row">
         
         <div class="md:w-1/3 bg-slate-600 p-8 text-white flex flex-col justify-center">
-            <img src="{{ asset('LOGO_FOCCUS.png') }}" class="w-40 mb-8 brightness-0 invert" alt="Logo Foccus">
+            <img src="/LOGO_FOCCUS.png" class="w-40 mb-8 brightness-0 invert" alt="Logo Foccus">
             <h2 class="text-2xl font-bold mb-4">Seja um cliente Foccus</h2>
             <ul class="space-y-4 text-sm text-slate-100">
                 <li class="flex items-center gap-2">

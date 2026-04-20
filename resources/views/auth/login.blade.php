@@ -11,7 +11,7 @@
     <div class="max-w-4xl w-full bg-white rounded-2xl shadow-xl overflow-hidden flex flex-col md:row-reverse md:flex-row">
         
         <div class="md:w-1/3 bg-slate-600 p-8 text-white flex flex-col justify-center text-center md:text-left">
-            <img src="{{ asset('LOGO_FOCCUS.png') }}" class="w-32 mb-8 mx-auto md:mx-0 brightness-0 invert" alt="Logo Foccus">
+            <img src="/LOGO_FOCCUS.png" class="w-32 mb-8 mx-auto md:mx-0 brightness-0 invert" alt="Logo Foccus">
             <h2 class="text-2xl font-bold mb-4">Bem-vindo de volta!</h2>
             <p class="text-slate-200 text-sm leading-relaxed">
                 Acesse sua conta para conferir seus pedidos, preços exclusivos e o estoque atualizado em tempo real.

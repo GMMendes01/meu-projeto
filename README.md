@@ -44,6 +44,20 @@ Como usar:
 4. Clique no ícone do carrinho (🛒) para abrir o modal
 5. No modal pode: aumentar/diminuir quantidade, remover itens, continuar comprando
 
+#### ✅ Checkout e Finalizacao de Pedido
+- Rota de checkout em `/checkout`
+- Processamento da finalizacao em `/checkout/processar` com dados do cliente e método preferido (PIX, Cartão, Boleto)
+- Integração com Mercado Pago Checkout Pro (quando `MERCADO_PAGO_ACCESS_TOKEN` estiver configurado)
+- Fallback automático para modo simulado local quando não há token
+- Página de retorno com status da transação em `/checkout/retorno`
+
+Variáveis para integração de pagamento:
+```env
+MERCADO_PAGO_ACCESS_TOKEN=
+MERCADO_PAGO_SANDBOX=true
+MERCADO_PAGO_WEBHOOK_URL=
+```
+
 ### Possíveis Erros e Soluções
 
 Se PHP não funcionar com `libcrypto.so.1.1 error`, use:

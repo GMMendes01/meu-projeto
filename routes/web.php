@@ -7,8 +7,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CarrinhoController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\AdminProdutoController;
 
 Route::get('/', function () {
     $destaques = Produto::where('destaque', 1)->get();
@@ -24,10 +26,26 @@ Route::post('/carrinho/{produto}', [CarrinhoController::class, 'store'])->name('
 Route::put('/carrinho/{produto}', [CarrinhoController::class, 'update'])->name('carrinho.update');
 Route::delete('/carrinho/{produto}', [CarrinhoController::class, 'destroy'])->name('carrinho.remove');
 Route::delete('/carrinho', [CarrinhoController::class, 'clear'])->name('carrinho.clear');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+Route::get('/checkout/processar', fn () => redirect()->route('checkout.index'));
+Route::post('/checkout/processar', [CheckoutController::class, 'finalizar'])->name('checkout.processar');
+Route::get('/checkout/retorno', [CheckoutController::class, 'retorno'])->name('checkout.retorno');
 
 //Rotas de Conta
-Route::get('/meusdados',[UserController::class, 'meusdados']);
-Route::post('/meusdados',[UserController::class, 'meusdados']);
+Route::get('/meusdados',[UserController::class, 'meusdados'])->middleware('auth');;
+Route::post('/meusdados/update', function (\Illuminate\Http\Request $request) {
+    
+    $user = auth()->user();
+
+    $user->update([
+        'name' => $request->name,
+        'email' => $request->email,
+        'cpf' => $request->cpf,
+        'telefone' => $request->telefone
+    ]);
+
+    return back()->with('success', 'Dados atualizados!');
+});
 
 // Rotas de Registro
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
@@ -39,7 +57,21 @@ Route::post('/register', [RegisteredUserController::class, 'store']);
 // Rotas de Login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
-Route::GET('/logout', function () {
+Route::post('/logout', function () {
     Auth::logout();
     return redirect('/');
+})->name('logout');
+
+// Rotas de Admin (Painel de Administração)
+Route::prefix('admin')->name('admin.')->middleware('auth')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [AdminProdutoController::class, 'dashboard'])->name('dashboard');
+    Route::get('/produtos/search', [AdminProdutoController::class, 'search'])->name('produtos.search');
+    
+    // CRUD de Produtos
+    Route::resource('produtos', AdminProdutoController::class);
+    
+    // Ações especiais
+    Route::patch('/produtos/{produto}/toggle', [AdminProdutoController::class, 'toggle'])->name('produtos.toggle');
+    Route::patch('/produtos/{produto}/toggle-destaque', [AdminProdutoController::class, 'toggleDestaque'])->name('produtos.toggleDestaque');
 });

@@ -6,7 +6,7 @@
     <title>Carrinho | Distribuidora Foccus</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
+    <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
     <style>
         body {
             background:
@@ -19,11 +19,11 @@
     <nav class="bg-slate-500 text-white p-4 shadow-lg sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center gap-8">
             <a href="/" class="flex-shrink-0">
-                <img src="{{ asset('LOGO_FOCCUS.png') }}" class="w-40 brightness-0 invert" alt="Logo Foccus">
+                <img src="/LOGO_FOCCUS.png" class="w-40 brightness-0 invert" alt="Logo Foccus">
             </a>
 
             <div class="flex items-center gap-3">
-                <a href="{{ route('carrinho.index') }}" class="relative bg-slate-800 px-4 py-2 rounded-full hover:bg-slate-700 transition flex items-center gap-2">
+                <a href="/carrinho" class="relative bg-slate-800 px-4 py-2 rounded-full hover:bg-slate-700 transition flex items-center gap-2">
                     <span class="text-sm">🛒</span>
                     <span class="text-xs font-bold hidden md:inline">Carrinho</span>
                     @if ($quantidadeTotal > 0)
@@ -119,6 +119,10 @@
                     @method('DELETE')
                     <button type="submit" class="w-full rounded-xl border border-white/15 px-4 py-3 text-sm font-bold text-white transition hover:bg-white/10">Limpar carrinho</button>
                 </form>
+
+                @if ($quantidadeTotal > 0)
+                    <a href="/checkout" class="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-emerald-500 px-4 py-3 text-sm font-bold text-white transition hover:bg-emerald-400">Ir para checkout</a>
+                @endif
 
                 <a href="/" class="mt-3 inline-flex w-full items-center justify-center rounded-xl bg-white px-4 py-3 text-sm font-bold text-slate-900 transition hover:bg-slate-100">Continuar comprando</a>
             </aside>
