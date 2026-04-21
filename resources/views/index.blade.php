@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Distribuidora Foccus | Portal B2B</title>
+    <title>Foccus comercial | Distribuidora</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://kit.fontawesome.com/02669f3445.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <link rel="shortcut icon" href="/favicon.png" type="image/x-icon">
 
     <style>
@@ -261,7 +262,16 @@ border-radius:20px;
 background-color:#5f6f86;
 font-weight: 500 ;
 transition: background-color 0.3s ease, transform 0.2s ease;
+text-align: center;
 }
+
+
+.conteiner-img #compre {
+   padding: 10px 100px 10px 100px;
+   justify-self:center;
+   
+}
+
 
 .conteiner-img a:hover{
 transform: translateY(-2px);
@@ -306,7 +316,7 @@ background-color:#a9abae;
             $categoriaMeta[$nomeCategoria] = $meta;
         }
     @endphp
-    <div class="w-full text-center text-white bg-slate-600 font-sans text-sm"><p>Ofertas Imperdiveis 🔥</p></div>
+    <div class="w-full text-center text-white bg-slate-600 font-sans text-sm"><p>Ofertas imperdíveis de até <strong> 20%OFF! </strong> Você não vai querer perder! 🔥</p></div>
     <nav class="glass sticky top-0 z-50 border-b border-white/10">
         <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 md:px-8">
             <a href="/" class="shrink-0">
@@ -383,11 +393,34 @@ background-color:#a9abae;
 
     <main class="mx-auto max-w-7xl px-4 py-8 md:px-8 md:py-10">
         <section class=" reveal mb-14  shadow-lg">
-            <img width="100%" class="w-full w-screen" src="{{ asset('Banner1.png') }}" alt="carrosel 1 imagem" widtch:>
+            <div id="carouselExampleInterval" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active" data-bs-interval="10000">
+                  <img width="100%" class="w-full w-screen" src="{{ asset('carousel/Banner1.png') }}" alt="carrosel 1 imagem" widtch:>
             <div class="conteiner-img">
                 <a href="#ofertas" class=" ">Ofertas da Semana 🔥</a>
                 <a href="#catalogo" class="">Catalogo de produtos</a>
             </div>
+    </div>
+    <div class="carousel-item" data-bs-interval="2000">
+      <img src="{{ asset('carousel/Banner2.png') }}" class="d-block w-100" alt="...">
+    </div>
+    <div class="carousel-item">
+      <img src="{{ asset('carousel/Banner3.png') }}" class="d-block w-100" alt="...">
+        <div class="conteiner-img">
+            <a id="compre" href="#catalogo" class=" ">Compre Já!</a>
+        </div>
+    </div>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleInterval" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
+</div>
         </section>
 
         <section id="ofertas" class="reveal mb-16">
@@ -1073,5 +1106,6 @@ background-color:#a9abae;
             }
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </body>
 </html>
