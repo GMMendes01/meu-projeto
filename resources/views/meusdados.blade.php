@@ -46,11 +46,11 @@
                     <div class="flex gap-[20px] mb-[20px]">
                         <div class="flex-1">
                             <label class="block text-[11px] font-bold text-[#aaa] uppercase tracking-[1px] mb-[5px]">CPF</label>
-                            <input name="cpf" type="text" value="{{ auth()->user()->cpf }}" class="w-full p-[12px] border border-[#e0e0e0] rounded-[8px] text-[14px] outline-none focus:border-[#465367] transition-colors">
+                            <input name="cpf" type="text" value="{{ auth()->user()->cpf }}" data-format="999.999.999-99" class="w-full p-[12px] border border-[#e0e0e0] rounded-[8px] text-[14px] outline-none focus:border-[#465367] transition-colors">
                         </div>
                         <div class="flex-1">
                             <label class="block text-[11px] font-bold text-[#aaa] uppercase tracking-[1px] mb-[5px]">Telefone</label>
-                            <input name="telefone" type="text" value="{{ auth()->user()->telefone }}" class="w-full p-[12px] border border-[#e0e0e0] rounded-[8px] text-[14px] outline-none focus:border-[#465367] transition-colors">
+                            <input name="telefone" type="text" value="{{ auth()->user()->telefone }}" data-format="(99) 9999-9999" data-alt-format="(99) 99999-9999"  class="w-full p-[12px] border border-[#e0e0e0] rounded-[8px] text-[14px] outline-none focus:border-[#465367] transition-colors">
                         </div>
                     </div>
 

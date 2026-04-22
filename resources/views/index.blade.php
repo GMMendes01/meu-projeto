@@ -658,6 +658,12 @@ background-color:#a9abae;
             </div>
         </div>
     </div>
+<!----->
+
+    <footer class="mt-20 border-t border-slate-200 bg-white/80 p-8 text-center text-sm text-slate-500">
+        &copy; {{ date('Y') }} Distribuidora Foccus - Todos os direitos reservados.
+    </footer>
+
 
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
