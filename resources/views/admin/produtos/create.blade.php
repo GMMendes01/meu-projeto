@@ -161,16 +161,12 @@
                     </div>
                 </div>
 
-                <div class="row mt-4">
-                    <div class="col-md-12">
-                        <button type="submit" class="btn btn-success btn-lg">
-                            <i class="fas fa-save"></i> Adicionar Produto
-                        </button>
-                        <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary btn-lg">
-                            Cancelar
-                        </a>
-                    </div>
-                </div>
+                <button type="submit" class="btn btn-lg px-4" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border: none; color: white; font-weight: 600;">
+                    <i class="fas fa-save"></i> Adicionar Produto
+                </button>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-lg px-4" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none; color: white; font-weight: 600;">
+                    Cancelar
+                </a>
             </form>
         </div>
     </div>

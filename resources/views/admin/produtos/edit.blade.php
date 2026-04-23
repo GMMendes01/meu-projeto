@@ -173,10 +173,10 @@
 
                         <div class="row mt-4">
                             <div class="col-md-12">
-                                <button type="submit" class="btn btn-primary btn-lg">
+                                <button type="submit" class="btn btn-lg px-4" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); border: none; color: white; font-weight: 600;">
                                     <i class="fas fa-save"></i> Atualizar Produto
                                 </button>
-                                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary btn-lg">
+                                <a href="{{ route('admin.dashboard') }}" class="btn btn-lg px-4" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border: none; color: white; font-weight: 600;">
                                     Cancelar
                                 </a>
                             </div>

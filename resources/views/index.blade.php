@@ -347,6 +347,7 @@ background-color:#a9abae;
                     <div id="menu" class="dropdown-content">
                          <a target="_blank" href="/meusdados">Meus dados</a>
                          <a target="_blank" href="/">Meus Pedidos</a>
+                         <a target="_blank" href="/admin/dashboard">Dashboard</a>
                          <form method="POST" action="/logout">
                         @csrf
                          <button type="submit">Sair</button>

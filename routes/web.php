@@ -47,6 +47,12 @@ Route::post('/meusdados/update', function (\Illuminate\Http\Request $request) {
     return back()->with('success', 'Dados atualizados!');
 });
 
+// Rotas de Trocar Senha
+Route::middleware('auth')->group(function () {
+    Route::get('/change-password', [UserController::class, 'changePasswordForm'])->name('change-password.form');
+    Route::post('/change-password', [UserController::class, 'changePassword'])->name('change-password.update');
+});
+
 // Rotas de Registro
 Route::get('/register', [RegisteredUserController::class, 'create'])->name('register');
 Route::post('/register', [RegisteredUserController::class, 'store']);

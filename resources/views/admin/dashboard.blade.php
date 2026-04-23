@@ -1,6 +1,13 @@
 @extends('layouts.app')
 
 @section('content')
+<style>
+    .card {
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        background-color: #ffffff;
+    }
+</style>
 <div class="container mt-4">
     <div class="row mb-4">
         <div class="col-md-8">
@@ -16,34 +23,34 @@
     <!-- Cards de Estatísticas -->
     <div class="row mb-4">
         <div class="col-md-3">
-            <div class="card text-white bg-primary">
+           <div class="card text-white shadow-sm" style="background: linear-gradient(135deg, #010d76 0%, #000d87 120%); border: none; border-radius: 12px;">
                 <div class="card-body">
                     <h6 class="card-title">Total de Produtos</h6>
-                    <h2>{{ $totalProdutos ?? 0 }}</h2>
+                    <h2 class="fw-bold" style="color: #fff;">{{ $totalProdutos ?? 0 }}</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-success">
+           <div class="card text-white shadow-sm" style="background: linear-gradient(135deg, #010d76 0%, #000d87 120%); border: none; border-radius: 12px;">
                 <div class="card-body">
                     <h6 class="card-title">Produtos Ativos</h6>
-                    <h2>{{ $produtosAtivos ?? 0 }}</h2>
+                    <h2 class="fw-bold" style="color: #fff;">{{ $produtosAtivos ?? 0 }}</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-warning">
+           <div class="card text-white shadow-sm" style="background: linear-gradient(135deg, #010d76 0%, #000d87 120%); border: none; border-radius: 12px;">
                 <div class="card-body">
                     <h6 class="card-title">Produtos Inativos</h6>
-                    <h2>{{ $produtosInativos ?? 0 }}</h2>
+                    <h2 class="fw-bold" style="color: #fff;">{{ $produtosInativos ?? 0 }}</h2>
                 </div>
             </div>
         </div>
         <div class="col-md-3">
-            <div class="card text-white bg-info">
+            <div class="card text-white shadow-sm" style="background: linear-gradient(135deg, #010d76 0%, #000d87 120%); border: none; border-radius: 12px;">
                 <div class="card-body">
                     <h6 class="card-title">Em Destaque</h6>
-                    <h2>{{ $destaque ?? 0 }}</h2>
+                    <h2 class="fw-bold" style="color: #fff;">{{ $destaque ?? 0 }}</h2>
                 </div>
             </div>
         </div>
@@ -64,7 +71,7 @@
                     <input type="text" name="termo" class="form-control" placeholder="Buscar por nome, categoria ou código de barras..." value="{{ $termo ?? '' }}">
                 </div>
                 <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary w-100">
+                    <button type="submit" class="btn btn-primary w-100" style="background: linear-gradient(135deg, #001aff 0%, #00063d 120%); border: none;">
                         <i class="fas fa-search"></i> Buscar
                     </button>
                 </div>
@@ -118,7 +125,10 @@
                         </td>
                         <td>
                             @if($produto->destaque)
-                                <span class="badge bg-warning">⭐ Destaque</span>
+                                <span class="badge bg-warning" style="display: inline-flex; align-items: center;">
+                                   <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#FFFFFF"><path d="m311-228 45-192-149-129 196-17 77-181 77 181 196 17-149 129 45 192-169-102-169 102Z"/></svg>
+                                    Destaque
+                                </span>
                             @else
                                 <span class="badge bg-light text-dark">Normal</span>
                             @endif
