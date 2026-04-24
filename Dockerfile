@@ -2,8 +2,8 @@
 FROM php:8.2-fpm AS builder
 
 RUN apt-get update && apt-get install -y \
-    curl git unzip libpng-dev \
-    && docker-php-ext-install pdo pdo_mysql gd
+    curl git unzip libpng-dev libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql gd
 
 # Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -27,8 +27,8 @@ FROM php:8.2-fpm
 
 # Instalar extensões necessárias para rodar o sistema e Nginx/Supervisor
 RUN apt-get update && apt-get install -y \
-    libpng-dev nginx supervisor \
-    && docker-php-ext-install pdo pdo_mysql gd \
+    libpng-dev libpq-dev nginx supervisor \
+    && docker-php-ext-install pdo pdo_pgsql gd \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
