@@ -11,22 +11,48 @@ services:
         value: "production"
       - key: APP_DEBUG
         value: "false"
+      - key: APP_KEY
+        generateValue: true
       - key: APP_LOCALE
         value: "pt_BR"
       - key: APP_FALLBACK_LOCALE
         value: "pt_BR"
       - key: DB_CONNECTION
         value: "mysql"
-      - key: RENDER_EXTERNAL_HOSTNAME
+      - key: DB_HOST
         fromService:
-          name: pi-3-semestre
+          type: mysql
+          name: pi-3-semestre-db
           property: host
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_DATABASE
+        fromService:
+          type: mysql
+          name: pi-3-semestre-db
+          property: database
+      - key: DB_USERNAME
+        fromService:
+          type: mysql
+          name: pi-3-semestre-db
+          property: user
+      - key: DB_PASSWORD
+        fromService:
+          type: mysql
+          name: pi-3-semestre-db
+          property: password
       - key: APP_URL
         value: "https://${RENDER_EXTERNAL_HOSTNAME}"
       - key: LOG_CHANNEL
         value: "stack"
       - key: LOG_LEVEL
         value: "info"
+      - key: CACHE_DRIVER
+        value: "file"
+      - key: QUEUE_CONNECTION
+        value: "sync"
+      - key: SESSION_DRIVER
+        value: "database"
 
   - type: mysql
     name: pi-3-semestre-db
