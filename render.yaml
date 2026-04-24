@@ -24,17 +24,17 @@ services:
         value: "pgsql"
       - key: DB_HOST
         sync: false
-        value: "aws-0-us-east-1.pooler.supabase.com"
+        value: "db.wgrqhvzrakgnvksakerd.supabase.co"
       - key: DB_PORT
         value: "6543"
       - key: DB_DATABASE
         value: "postgres"
       - key: DB_USERNAME
         sync: false
-        value: "postgres.seu-projeto"
+        value: "postgres"
       - key: DB_PASSWORD
         sync: false
-        value: "sua-senha-do-supabase"
+        value: "Virtus12@2026"
       - key: DB_SSLMODE
         value: "require"
       - key: APP_URL
