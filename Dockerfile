@@ -5,6 +5,9 @@ RUN apt-get update && apt-get install -y \
     curl git unzip libpng-dev \
     && docker-php-ext-install pdo pdo_mysql gd
 
+# Instalar Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
 # Instalar Node.js 22 (Versão necessária para Vite 7 e Tailwind 4)
 RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash - \
     && apt-get install -y nodejs \
