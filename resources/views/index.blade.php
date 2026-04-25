@@ -23,13 +23,6 @@
             --promo: #dc2626;
         }
 
-        body {
-            background:
-                radial-gradient(circle at 0% 0%, rgba(14, 165, 233, 0.18), transparent 34%),
-                radial-gradient(circle at 100% 10%, rgba(249, 115, 22, 0.14), transparent 38%),
-                linear-gradient(180deg, #f8fafc 0%, #eef2ff 42%, #f8fafc 100%);
-        }
-
         .animated-bg {
             position: relative;
             overflow: hidden;
