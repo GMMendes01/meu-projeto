@@ -270,7 +270,6 @@ text-align: center;
 transform: translateY(-2px);
 background-color:#a9abae;
 }
-
     </style>
 </head>
 <body class="min-h-screen text-slate-900">
@@ -309,6 +308,27 @@ background-color:#a9abae;
             $categoriaMeta[$nomeCategoria] = $meta;
         }
     @endphp
+<!---ANIMAÇÃO DE CARREGAMENTO --->
+
+<div class="carregando fixed inset-0 z-[1002] flex flex-col items-center justify-center overflow-hidden bg-slate-600/90">
+<div class="mb-8 flex justify-center w-full">
+    <img class="w-1/4 h-auto object-contain brightness-0 invert" src="{{asset('LOGO_FOCCUS.png')}}" alt="Logo">
+</div>
+    <!-- Barra de Progresso (progresso) -->
+    <div class="w-1/2 overflow-hidden rounded-full bg-white/20">
+        <div class="barra h-[5px] w-0 bg-white"></div>
+    </div>
+</div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+    $(window).on("load",function(){
+        $(".barra").animate({width:"100%"},1000,function(){
+            $(".carregando").fadeOut(500);
+        });
+    });
+    </script>
+
+<!-------------------------------->
     <div class="w-full text-center text-white bg-slate-600 font-sans text-sm"><p>Ofertas imperdíveis de até <strong> 20%OFF! </strong> Você não vai querer perder! 🔥</p></div>
     <nav class="glass sticky top-0 z-50 border-b border-white/10">
         <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-4 md:px-8">
